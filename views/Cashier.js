@@ -1,53 +1,83 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text } from 'react-native'
 import { TextInput, Button } from 'react-native-paper';
-
+import { container, button, input, panel, numberbill, text } from '../styles/components/'
 export default class Home extends React.Component {
 
-
   render() {
-
     return (
-      <View style={styles.container}>
+      <View style={container.defaultGround}>
 
         <View>
-          <Text style={styles.textbill}>
+          <Text style={numberbill.textStyle}>
             เลขที่บิล xxxx-xxxx-xxxx
           </Text>
         </View>
-        <View style={styles.addPanelInput}>
+        <View style={panel.panel_row_around}>
           <View>
-            <TextInput style={styles.input}
+            <TextInput style={input.cashierAddInput}
               label="ป้อนบาร์โค๊ด"
 
             />
-            <TextInput style={styles.input}
+            <TextInput style={input.cashierAddInput}
               label="จำนวน"
 
             />
 
           </View>
-          <View style={styles.addPanelButton}>
+          <View style={panel.panel_column_around}>
 
-            <Button style={styles.btnProductAdd} mode="contained" onPress={() => console.log('Pressed')}>
+            <Button style={button.btnAdd} mode="contained" onPress={() => console.log('Pressed')}>
               เพิ่มสินค้า
           </Button>
-          
-          <Button icon={require('../assets/icon/cashier/scanner.png')} style={styles.btnProductScan} mode="contained" onPress={() => console.log('Pressed')}>
+
+            <Button icon={require('../assets/icon/cashier/scanner.png')} style={button.btnScan} mode="contained" onPress={() => console.log('Pressed')}>
               สแกน
           </Button>
 
           </View>
 
+
         </View>
 
-        <View style={styles.productPanel}>
 
-          <Text style={styles.productDefaultPanel}>
+        <View style={panel.productTotalPanel}>
+          <View style={panel.panel_column_around}>
+            <View style={panel.panel_row_around}>
+              <Text >
+                รวม
+            </Text>
+              <Text style={text.textTotal}>800</Text> {/* ตรงนี้มีโอกาศ Text แสดงผลไม่ถูกต้องเมื่อจำนวนตัวเลขมี มากขึ้น */}
+
+            </View>
+
+            <Button style={button.btnDelete} mode="contained" onPress={() => console.log('Pressed')}>
+              ยกเลิก
+          </Button>
+
+          </View>
+
+          <View style={panel.panel_column_around}>
+
+            <Button style={button.btnPayment} mode="contained" onPress={() => console.log('Pressed')}>
+              ชำระเงินสด
+          </Button>
+            <Button style={button.btnPromptPay} mode="contained" onPress={() => console.log('Pressed')}>
+              พร้อมเพย์
+          </Button>
+          </View>
+
+
+        </View>
+
+
+
+
+        {/* <Text style={styles.productDefaultPanel}>
             ยังไม่มีสินค้า
-          </Text>
+          </Text> */}
 
-        </View>
+
 
 
       </View>
@@ -55,52 +85,3 @@ export default class Home extends React.Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  text: {
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  textbill: {
-    fontSize: 12,
-    marginLeft:10,
-    color: '#808080'
-  },
-  input: {
-    width: 220,
-    height: 50,
-  
-    backgroundColor: 'white'
-  },
-  addPanelInput: {
-    flexDirection: "row",
-    justifyContent: 'space-around'
-  },
-  addPanelButton: {
-    flexDirection: "column",
-    justifyContent: 'space-around',
-    
-
-  },
-  btnProductAdd : {
-   backgroundColor: "#6ACA6B"
-  },
-  btnProductScan : {
-    backgroundColor : "#FD6721"
-  },
-  productPanel : {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent:"center"
-    
-  },
-  productDefaultPanel : {
-    textAlign:"center",
-  }
-
-
-});
