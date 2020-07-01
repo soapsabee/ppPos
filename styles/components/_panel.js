@@ -11,11 +11,15 @@ export const panel = StyleSheet.create({
         flexDirection: "column",
         justifyContent: 'space-around'
     },
+    content_row_between:{
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
     productTotalPanel: {
         flexDirection: "row",
         justifyContent: "space-between",
-        flex: 0.2,
-        padding: 20
+        height:170,
+        padding: 30
     }
 
 

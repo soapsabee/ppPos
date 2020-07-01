@@ -18,6 +18,10 @@ export const button = StyleSheet.create({
     },
     btnPromptPay : {
         backgroundColor:"#9900FF"
+    },
+    btnCancelDelete : {
+
+        backgroundColor: "#3366CC"
     }
 
 
