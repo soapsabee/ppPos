@@ -9,13 +9,15 @@ import AddProduct from '../components/AddProduct'
 
 export default class Home extends React.Component {
 
+
+
   render() {
     return (
       <View style={container.defaultGround}>
 
         <NumberBill/>
         <AddProduct/>
-        <PaymentPanel/>
+        <PaymentPanel navigation = {this.props.navigation} />
         <BasketListProduct/>
         
       </View>
