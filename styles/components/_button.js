@@ -22,6 +22,15 @@ export const button = StyleSheet.create({
     btnCancelDelete : {
 
         backgroundColor: "#3366CC"
+    },
+    btnCalculator : {
+        backgroundColor:"#6BCDFD",
+        justifyContent: "center",
+        margin:2
+    },
+
+    btnCalculatorContent :{
+        width: 70, height: 70
     }
 
 
