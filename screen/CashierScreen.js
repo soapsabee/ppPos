@@ -1,9 +1,11 @@
 import React from 'react'
 import { AppLoading } from 'expo';
 import { useFonts, Prompt_300Light } from '@expo-google-fonts/prompt';
-import { createStackNavigator , HeaderBackButton , TransitionPresets  } from '@react-navigation/stack';
+import { createStackNavigator, HeaderBackButton, TransitionPresets } from '@react-navigation/stack';
 import Cashier from '../views/Cashier'
 import PaymentCashier from '../views/PaymentCashier'
+import PromptPayCashier from '../views/PromptPayCashier'
+import ConfirmPayment from '../views/ConfirmPayment'
 import { NavigationDrawer } from '../components/NavigationDrawer'
 
 const Stack = createStackNavigator();
@@ -11,7 +13,6 @@ const Stack = createStackNavigator();
 
 export const CashierScreen = ({ navigation }) => {
 
-  console.log("navi", navigation)
   let [fontsLoaded] = useFonts({
     Prompt_300Light,
   });
@@ -20,7 +21,7 @@ export const CashierScreen = ({ navigation }) => {
     return <AppLoading />;
   } else {
     return (
-      <Stack.Navigator initialRouteName="Cashier"  screenOptions={{ ...TransitionPresets.SlideFromRightIOS }} >
+      <Stack.Navigator initialRouteName="Cashier" screenOptions={{ ...TransitionPresets.SlideFromRightIOS }} >
 
         <Stack.Screen
           name="Cashier"
@@ -52,8 +53,44 @@ export const CashierScreen = ({ navigation }) => {
               fontFamily: "Prompt_300Light",
 
             },
-              
-            }
+
+          }
+          }
+        />
+
+        <Stack.Screen
+          name="PromptPayCashier"
+          component={PromptPayCashier}
+          options={{
+            title: 'พร้อมเพย์', //Set Header Title,
+            headerStyle: {
+              backgroundColor: '#6BCDFD', //Set Header color
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontFamily: "Prompt_300Light",
+
+            },
+
+          }
+          }
+        />
+
+        <Stack.Screen
+          name="ConfirmPayment"
+          component={ConfirmPayment}
+          options={{
+            title: 'ยืนยันการชำระเงิน', //Set Header Title,
+            headerStyle: {
+              backgroundColor: '#6BCDFD', //Set Header color
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontFamily: "Prompt_300Light",
+
+            },
+
+          }
           }
         />
 

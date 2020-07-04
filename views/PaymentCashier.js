@@ -87,7 +87,7 @@ export default class PaymentCashier extends React.Component {
                 <Button style={button.btnCalculator} contentStyle={button.btnCalculatorContent} mode="contained" onPress={() => console.log('Pressed')}>
                   .
           </Button>
-                <Button style={{ backgroundColor:"#6ACA6B" , justifyContent: "center", margin: 2 }} contentStyle={{ width: 140, height: 70, }} mode="contained" onPress={() => console.log('Pressed')}>
+                <Button style={{ backgroundColor:"#6ACA6B" , justifyContent: "center", margin: 2 }} contentStyle={{ width: 140, height: 70, }} mode="contained" onPress={() => this.props.navigation.navigate('ConfirmPayment')}>
                   ยืนยัน
           </Button>
               </View>

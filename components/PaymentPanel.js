@@ -9,7 +9,6 @@ export default class PaymentPanel extends React.Component {
 
     render(){
 
-        console.log("Pay:",this.props)
         return (
 
             <View style={panel.productTotalPanel}>
@@ -33,7 +32,7 @@ export default class PaymentPanel extends React.Component {
               <Button style={button.btnPayment} mode="contained" onPress={() => this.props.navigation.navigate('PaymentCashier')}>
                 ชำระเงินสด
             </Button>
-              <Button style={button.btnPromptPay} mode="contained" onPress={() => console.log('Pressed')}>
+              <Button style={button.btnPromptPay} mode="contained" onPress={() => this.props.navigation.navigate('PromptPayCashier')}>
                 พร้อมเพย์
             </Button>
             </View>
