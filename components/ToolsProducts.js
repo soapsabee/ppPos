@@ -12,7 +12,7 @@ export default class ToolsProducts extends React.Component {
 
                 {/* <ToolDeleteProducts /> */}
 
-                <ToolAddProducts />
+                <ToolAddProducts navigation = {this.props.navigation} />
             </View>
 
 

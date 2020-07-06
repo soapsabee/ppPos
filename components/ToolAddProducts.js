@@ -21,7 +21,7 @@ export default class ToolAddProduct extends React.Component {
                     color="#6ACB9A"
                     size={70}
 
-                    onPress={() => console.log('Pressed')}
+                    onPress={() => this.props.navigation.navigate('AddProduct')}
                 />
             </View>
         )

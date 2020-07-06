@@ -34,10 +34,10 @@ export default class Products extends React.Component {
         </View>
 
         < ScrollView >
-            <CardProducts/>
+            <CardProducts />
         </ScrollView >
 
-        <ToolsProducts />
+        <ToolsProducts navigation = {this.props.navigation} />
       </View>
 
 
