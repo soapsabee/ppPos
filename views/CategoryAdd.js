@@ -1,32 +1,21 @@
 import React from 'react'
-import { View, Text, Button, StyleSheet } from 'react-native'
-
+import AddTypeProduct from '../components/AddTypeProduct'
 export default class CategoryAdd extends React.Component {
 
- 
+
+  state = {
+
+    search: ''
+  }
+
   render() {
-  
+
     return (
-        <View style= {styles.container}>
-          <Text >
-            Category Add
-          </Text>
-          
-        </View>
-      
+
+    
+        <AddTypeProduct TypeAdd={"หมวดหมู่สินค้า"}/>
+    
     )
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  text: {
-    fontSize: 20,
-    textAlign: 'center',
-  }
-});

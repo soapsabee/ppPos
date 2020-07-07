@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Picker, ScrollView, Alert } from 'react-native'
-import { Searchbar ,Card, Avatar, Checkbox, Divider } from 'react-native-paper';
+import { Searchbar } from 'react-native-paper';
 import ToolsProducts from '../components/ToolsProducts'
 import CardProducts from '../components/CardProducts'
 
@@ -35,6 +35,11 @@ export default class Products extends React.Component {
 
         < ScrollView >
             <CardProducts />
+            <CardProducts />
+            <CardProducts />
+            <CardProducts />
+            <CardProducts />
+
         </ScrollView >
 
         <ToolsProducts navigation = {this.props.navigation} />

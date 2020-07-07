@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Image, Picker, ScrollView } from 'react-native'
-import { Avatar, Divider, IconButton, TextInput, Switch , Button } from 'react-native-paper';
+import { IconButton, TextInput, Switch , Button } from 'react-native-paper';
 
 
 
