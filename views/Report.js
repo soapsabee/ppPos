@@ -39,6 +39,7 @@ export default class Report extends React.Component {
           title="สรุปยอดขายรายเดือน"
           description="ระบุจาก เดือน/ปี"
           left={props => <List.Icon {...props} icon="folder" />}
+          onPress={() => this.props.navigation.navigate('MonthlyReports')}
         />
             <Divider />
 

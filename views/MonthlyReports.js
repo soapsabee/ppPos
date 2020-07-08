@@ -1,7 +1,7 @@
 import React from 'react'
 import Reports from '../components/Reports'
 
-export default class DailyReports extends React.Component {
+export default class MonthlyReports extends React.Component {
 
 
   render() {
