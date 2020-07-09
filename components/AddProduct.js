@@ -1,9 +1,14 @@
 import React from 'react'
 import { View } from 'react-native'
-import { TextInput, Button  } from 'react-native-paper';
+import { TextInput, Button, Modal, Text, Portal, Provider, IconButton } from 'react-native-paper';
 import { button, input, panel } from '../styles/components/'
 
+
 export default class AddProduct extends React.Component {
+
+
+
+
 
 
     render() {
@@ -22,7 +27,7 @@ export default class AddProduct extends React.Component {
                 </View>
                 <View style={panel.panel_column_around}>
 
-                    <Button style={button.btnAdd} mode="contained" onPress={() => console.log('Pressed')}>
+                    <Button style={button.btnAdd} mode="contained">
                         เพิ่มสินค้า
             </Button>
 
@@ -31,6 +36,7 @@ export default class AddProduct extends React.Component {
             </Button>
 
                 </View>
+
 
 
             </View>
