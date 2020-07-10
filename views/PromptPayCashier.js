@@ -7,7 +7,7 @@ export default class PromptPayCashier extends React.Component {
 
     render() {
         return (
-            <PromptPay />
+            <PromptPay navigation={this.props.navigation} />
         )
     }
 

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'
+import  { Provider as StoreProvider } from 'react-redux'
+import configureStore from "./redux/store"
+
 import { NavigationContainer , DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from './components/DrawerContent'
 import { Provider as PaperProvider } from 'react-native-paper';
 import { CashierScreen,ProductScreen,CategoryAddScreen,UnitAddScreen,ReportScreen,BackupScreen,SettingScreen} from './screen/'
-// import { ProductScreen } from './screen/ProductScreen'
-import { CategoryScreen } from './screen/CategoryAddScreen'
 
 
 const MyTheme = {
@@ -28,6 +27,7 @@ export default class App extends Component {
 
 
     return (
+      <StoreProvider store={configureStore}>
       <PaperProvider>
         <NavigationContainer theme={MyTheme}>
           <Drawer.Navigator drawerContent={(props) => <DrawerContent {... props} />} >
@@ -41,6 +41,7 @@ export default class App extends Component {
           </Drawer.Navigator>
         </NavigationContainer>
       </PaperProvider>
+      </StoreProvider>
     )
 
   }

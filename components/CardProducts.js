@@ -5,7 +5,11 @@ import { panel } from '../styles/components/'
 
 export default class CardProducts extends React.Component {
 
+
     render() {
+        const { name,cost,price,quantity } = this.props.card
+        // console.log("card :",this.props.card)
+
         return (
             <View>
 
@@ -32,7 +36,7 @@ export default class CardProducts extends React.Component {
                                 <View style={{ flexDirection: "column", marginLeft: 10 }}>
                                     <View>
                                         <Text>xxxxx-xxxxxx </Text>
-                                        <Text>ปลากระป๋อง</Text>
+                                        <Text>{name}</Text>
                                         <Text>อาหาร</Text>
                                     </View>
                                 </View>

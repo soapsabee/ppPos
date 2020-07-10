@@ -3,8 +3,11 @@ import { View, Text, Picker, ScrollView, Alert } from 'react-native'
 import { Searchbar } from 'react-native-paper';
 import ToolsProducts from '../components/ToolsProducts'
 import CardProducts from '../components/CardProducts'
+import { connect } from 'react-redux'
+import { productFetch } from '../redux/actions/'
+import { FETCH_PRODUCT, SET_PRODUCTS } from '../redux/actions'
 
-export default class Products extends React.Component {
+export class Products extends React.Component {
 
   state = {
     user: '',
@@ -15,7 +18,20 @@ export default class Products extends React.Component {
   }
 
 
+
+  componentDidMount = async () => {
+
+    const products = this.props.dispatch(productFetch(FETCH_PRODUCT, { value: "null", key: "null" }))
+  }
+
   render() {
+    const { products } = this.props
+    // console.log("products:",products.products)
+    // products.products.map((value)=>{
+
+    //   console.log("state:",value)
+
+    // })
     return (
 
       <View style={{ flex: 1, flexDirection: "column", padding: 20 }}>
@@ -34,15 +50,14 @@ export default class Products extends React.Component {
         </View>
 
         < ScrollView >
-            <CardProducts />
-            <CardProducts />
-            <CardProducts />
-            <CardProducts />
-            <CardProducts />
+          {products.products.map((value,i)=> <CardProducts key={i} card={value} /> )}
+      
+      
+
 
         </ScrollView >
 
-        <ToolsProducts navigation = {this.props.navigation} />
+        <ToolsProducts navigation={this.props.navigation} />
       </View>
 
 
@@ -54,3 +69,14 @@ export default class Products extends React.Component {
   }
 }
 
+
+const mapStateToProps = state => {
+
+  // return state
+  return {
+    products: state.products
+  }
+
+}
+
+export default connect(mapStateToProps)(Products)
