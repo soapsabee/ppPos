@@ -50,7 +50,7 @@ export class Products extends React.Component {
         </View>
 
         < ScrollView >
-          {products.products.map((value,i)=> <CardProducts key={i} card={value} /> )}
+          {products.products && products.products.map((value,i)=> <CardProducts key={i} card={value} /> )}
       
       
 

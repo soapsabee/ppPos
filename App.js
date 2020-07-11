@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import  { Provider as StoreProvider } from 'react-redux'
 import configureStore from "./redux/store"
+import db from './redux/database'
 
 import { NavigationContainer , DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,7 +9,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from './components/DrawerContent'
 import { Provider as PaperProvider } from 'react-native-paper';
 import { CashierScreen,ProductScreen,CategoryAddScreen,UnitAddScreen,ReportScreen,BackupScreen,SettingScreen} from './screen/'
-
 
 const MyTheme = {
   ...DefaultTheme,
@@ -23,6 +23,7 @@ const Drawer = createDrawerNavigator();
 
 export default class App extends Component {
 
+ 
   render() {
 
 
