@@ -1,4 +1,4 @@
-import { createStore , applyMiddleware } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 
 import rootReducer from "./reducer";
@@ -11,7 +11,12 @@ const sagaMiddleware = createSagaMiddleware();
 const bindMiddleware = middleware => {
     const arrMiddleware = [middleware];
 
-
+    if (process.env.NODE_ENV !== "production") {
+        const { composeWithDevTools } = require("redux-devtools-extension");
+        // arrMiddleware.push(createLogger());
+        return composeWithDevTools(applyMiddleware(...arrMiddleware));
+    }
+    
     return applyMiddleware(...arrMiddleware);
 };
 

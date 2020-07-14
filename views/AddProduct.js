@@ -1,6 +1,9 @@
 import React from 'react'
 import { View, Text, Image, Picker, ScrollView } from 'react-native'
 import { IconButton, TextInput, Switch , Button } from 'react-native-paper';
+import { connect } from 'react-redux'
+import { dispatchProducts } from '../redux/actions/'
+import { SET_HANDLEINPUTPRODUCTS } from '../redux/actions'
 
 
 
@@ -47,6 +50,7 @@ export default class AddProduct extends React.Component {
                     <TextInput
                         label="ชื่อสินค้า"
                         style={{backgroundColor: "transparent"}}
+                        onValueChange={(value)=>  this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "name" }))}
                     />
                          <Picker  selectedValue={this.state.user} onValueChange={this.updateUser}>
                         <Picker.Item label="หน่วยสินค้า" value="steve" />

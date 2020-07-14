@@ -4,7 +4,7 @@ import { Searchbar } from 'react-native-paper';
 import ToolsProducts from '../components/ToolsProducts'
 import CardProducts from '../components/CardProducts'
 import { connect } from 'react-redux'
-import { productFetch } from '../redux/actions/'
+import { dispatchProducts } from '../redux/actions/'
 import { FETCH_PRODUCT, SET_PRODUCTS } from '../redux/actions'
 
 export class Products extends React.Component {
@@ -21,7 +21,7 @@ export class Products extends React.Component {
 
   componentDidMount = async () => {
 
-    const products = this.props.dispatch(productFetch(FETCH_PRODUCT, { value: "null", key: "null" }))
+    const products = this.props.dispatch(dispatchProducts(FETCH_PRODUCT, { value: "null", key: "null" }))
   }
 
   render() {
