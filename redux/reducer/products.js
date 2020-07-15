@@ -1,4 +1,4 @@
-import { SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS } from '../actions'
+import { SET_PRODUCTS, SET_HANDLEINPUT_PRODUCTS } from '../actions'
 
 const initState = {
 
@@ -12,23 +12,24 @@ const initState = {
     barcode: "",
     detail: "",
     categoryID: "",
-    status: ""
-  }
+    status: 1
+  },
+  
 }
 
 const products = (state = initState, action) => {
 
 
-  switch (action.type) {
+  switch (action.type)  {
 
     case SET_PRODUCTS:
       const { key, value } = action.payload
       return { ...state, [key]: value }
-    case SET_HANDLEINPUTPRODUCTS:      
+    case SET_HANDLEINPUT_PRODUCTS: 
       return {
         ...state, handleInputProducts: {
           ...state.handleInputProducts,
-          [key]: value
+          [action.payload.key]: action.payload.value
         }
       }
     default:

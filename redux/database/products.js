@@ -23,10 +23,12 @@ export const productsFetch = () => {
     })
 }
 
-export const productsInsert = () => {
+export const productsInsert = (actions) => {
 
+    console.log("productsInsert:", actions);
+    const { name , price , quantity , cost , unit , barcode , detail, status} = actions.payload
     db.transaction(tx => {
-        tx.executeSql('INSERT INTO products (name, price, quantity, cost , unit, barcode, detail, status ) values (?,?,?,?,?,?,?,?)', ["xxx", 15.00, 32, 10.00, "xxx", "xxx", "xxx", "x"],
+        tx.executeSql('INSERT INTO products (name, price, quantity, cost , unit, barcode, detail, status ) values (?,?,?,?,?,?,?,?)', [name, price, quantity, cost, unit, barcode, detail, status],
             (txObj, resultSet) => console.log("resultSet:", resultSet),
             (txObj, error) => console.log('Error', error))
     })

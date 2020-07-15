@@ -1,4 +1,4 @@
-import { FETCH_PRODUCT , SET_PRODUCTS , SET_HANDLEINPUTPRODUCTS } from "../actions"
+import { FETCH_PRODUCT , SET_PRODUCTS , SET_HANDLEINPUTPRODUCTS , SET_HANDLEINPUT_PRODUCTS , INSERT_NEW_PRODUCT} from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
 
@@ -13,15 +13,23 @@ function* productFetch(actions) {
 
 function* setHandleInputProducts(actions) {
 
-
-    yield put({ type: SET_HANDLEINPUTPRODUCTS, payload: { key: actions.payload.key, value: actions.payload.value  } });
+    yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { key: actions.key, value: actions.payload  } });
 
 }
+
+function* insertNewProduct(actions) {
+    yield call(db.productsInsert, actions)
+    yield productFetch()
+    // yield put({ type: INSERT_NEW_PRODUCT, payload: { key: actions.key, value: actions.payload  } });
+
+}
+
 
 function* actionProducts() {
 
     yield takeLatest(FETCH_PRODUCT, productFetch)
     yield takeLatest(SET_HANDLEINPUTPRODUCTS, setHandleInputProducts)
+    yield takeLatest(INSERT_NEW_PRODUCT, insertNewProduct)
 
 }
 
