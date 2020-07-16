@@ -3,6 +3,7 @@ import { View, Text, Image, Picker, ScrollView } from 'react-native'
 import { IconButton, TextInput, Switch , Button } from 'react-native-paper';
 import { connect } from 'react-redux'
 import { dispatchProducts , SET_HANDLEINPUTPRODUCTS , INSERT_NEW_PRODUCT  } from '../redux/actions/'
+import * as ImagePicker from 'expo-image-picker';
 
 
 
@@ -25,6 +26,27 @@ export class AddProduct extends React.Component {
 
     }
 
+    _pickImage = async () => {
+        try {
+          let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+            base64:true
+          });
+          if (!result.cancelled) {
+            const blob = await (await fetch(result.uri)).blob();
+            await this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: blob, key: "imageURI" }))          
+        }
+            
+          console.log(result);
+        } catch (E) {
+          console.log(E);
+        }
+      }
+    
+
     render() {
         const { handleInputProducts } = this.props
             console.log("handleInputProducts",this.props)
@@ -46,7 +68,7 @@ export class AddProduct extends React.Component {
                         color="#3366CC"
                         size={30}
 
-                        onPress={() => this.props.navigation.navigate('AddProduct')}
+                        onPress={this._pickImage}
                     />
 
                 </View>

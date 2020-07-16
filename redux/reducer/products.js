@@ -11,6 +11,7 @@ const initState = {
     unit: "",
     barcode: "",
     detail: "",
+    imageURI:"",
     categoryID: "",
     status: 1
   },

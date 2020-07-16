@@ -26,6 +26,7 @@ export default class AddTypeProduct extends React.Component {
           <TextInput
             label={`ป้อนชื่อ${this.props.TypeAdd}`}
             style={{ flex: 1, backgroundColor: "transparent" }}
+            // onChangeText={() => }
           />
           <IconButton
             icon="plus-box"
@@ -41,6 +42,7 @@ export default class AddTypeProduct extends React.Component {
             <Checkbox />
             <Text>อาหารแห้ง</Text>
           </View>
+          
         </ScrollView >
         <View style={{alignItems:"flex-end"}}>
 
