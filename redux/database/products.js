@@ -1,13 +1,16 @@
 import * as SQLite from 'expo-sqlite'
 const db = SQLite.openDatabase('db.ppPosDb') // returns Database object
+import * as FileSystem from 'expo-file-system';
 
 export const productsFetch = () => {
     return new Promise((resolve, reject) => {
 
         db.transaction(tx => {
 
+      
+
             tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, quantity INT, cost FLOAT , unit TEXT , barcode TEXT, detail TEXT, status TEXT)'
+                'CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, quantity INT, cost FLOAT , unit TEXT , barcode TEXT, detail TEXT, imageURI TEXT, status INT)'
             )
             tx.executeSql(
                 'SELECT * FROM products', null,
@@ -22,13 +25,21 @@ export const productsFetch = () => {
     })
 }
 
-export const productsInsert = (actions) => {
+export const productsInsert = async (actions) => {
+    const folder = FileSystem.documentDirectory + "PPPOS_IMG"
+    console.log("folder:",folder)
+    const { name , price , quantity , cost , unit , barcode , detail, imageURI, status} = actions.payload
+    const newimageURI = imageURI.substring(imageURI.lastIndexOf("/")+1)
+    try{
+        await FileSystem.copyAsync({from: imageURI,to: folder  })
+        await db.transaction(tx => {
+            tx.executeSql('INSERT INTO products (name, price, quantity, cost , unit, barcode, detail, imageURI, status ) values (?,?,?,?,?,?,?,?,?)', [name, price, quantity, cost, unit, barcode, detail, `${folder}/${newimageURI}`, status],
+                (txObj, resultSet) => console.log("resultSet:", resultSet),
+                (txObj, error) => console.log('Error', error))
+        })
+    }catch(error){
+        console.log(error);
+    }
 
-    console.log("productsInsert:", actions);
-    const { name , price , quantity , cost , unit , barcode , detail, status} = actions.payload
-    db.transaction(tx => {
-        tx.executeSql('INSERT INTO products (name, price, quantity, cost , unit, barcode, detail, status ) values (?,?,?,?,?,?,?,?)', [name, price, quantity, cost, unit, barcode, detail, status],
-            (txObj, resultSet) => console.log("resultSet:", resultSet),
-            (txObj, error) => console.log('Error', error))
-    })
+  
 }

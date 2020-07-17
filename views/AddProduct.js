@@ -36,8 +36,8 @@ export class AddProduct extends React.Component {
             base64:true
           });
           if (!result.cancelled) {
-            const blob = await (await fetch(result.uri)).blob();
-            await this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: blob, key: "imageURI" }))          
+              console.log("ImageName:",result)
+             this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: result.uri, key: "imageURI" }))          
         }
             
           console.log(result);
@@ -61,7 +61,7 @@ export class AddProduct extends React.Component {
                         height: 150,
                         resizeMode: 'contain',
                         justifyContent: "center"
-                    }} source={require('../assets/ppposLogo.png')} />
+                    }} source={{uri: handleInputProducts.imageURI}} />
 
                     <IconButton
                         icon="image"
