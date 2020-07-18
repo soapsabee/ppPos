@@ -1,20 +1,20 @@
-import { SET_CATEGORYS , SET_HANDLEINPUT_CATEGORY } from '../actions'
+import { SET_UNITS , SET_HANDLEINPUT_UNIT } from '../actions'
 
 const initState = {
 
-  categories: [],
+  units:[],
   handleInputName:""
 }
 
-const categories = (state = initState, action) => {
+const units = (state = initState, action) => {
 
 
   switch (action.type)  {
 
-    case SET_CATEGORYS:
+    case SET_UNITS:
       const { key, value } = action.payload
       return { ...state, [key]: value }
-    case SET_HANDLEINPUT_CATEGORY:
+    case SET_HANDLEINPUT_UNIT:
         return {
             ...state, [action.payload.key]: action.payload.value
         }
@@ -24,4 +24,4 @@ const categories = (state = initState, action) => {
   }
 };
 
-export default categories
+export default units

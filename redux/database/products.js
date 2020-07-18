@@ -27,7 +27,6 @@ export const productsFetch = () => {
 
 export const productsInsert = async (actions) => {
     const folder = FileSystem.documentDirectory + "PPPOS_IMG"
-    console.log("folder:",folder)
     const { name , price , quantity , cost , unit , barcode , detail, imageURI, status} = actions.payload
     const newimageURI = imageURI.substring(imageURI.lastIndexOf("/")+1)
     try{
