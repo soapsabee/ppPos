@@ -3,8 +3,10 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { render } from 'react-dom';
+import { connect } from 'react-redux'
+import { dispatchProducts, SET_BARCODE_SCANNER} from '../redux/actions/'
 
-export default class BarCodeScannerProduct extends React.Component {
+export  class BarCodeScannerProduct extends React.Component {
     state = {
         hasCameraPermission: null,
         scanned: false,
@@ -17,10 +19,12 @@ export default class BarCodeScannerProduct extends React.Component {
 
     getPermissionsAsync = async () => {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasCameraPermission: status === 'granted' });
+        // this.setState({ hasCameraPermission: status === 'granted' });
+        this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: {status:status,barcode:""}, key: "hasCameraPermission" }));
+
     };
     render() {
-        const { hasCameraPermission, scanned } = this.state;
+        const { hasCameraPermission, scanned } = this.props;
 
         if (hasCameraPermission === null) {
             return <Text>Requesting for camera permission</Text>;
@@ -51,18 +55,31 @@ export default class BarCodeScannerProduct extends React.Component {
                 </BarCodeScanner>
 
                 {scanned && (
-                    <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false })} />
+                    <Button title={'Tap to Scan Again'} onPress={() => this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: {status:false,barcode:""}, key: "scanned" }))  } />
                 )}
             </View>
         );
     }
 
     handleBarCodeScanned = ({ type, data }) => {
-        this.setState({ scanned: true });
+        this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: {status:true,barcode:data}, key: "scanned" }));
         alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
     
 }
+
+
+const mapStateToProps = state => {
+
+    // return state
+    return {
+        hasCameraPermission: state.products.hasCameraPermission,
+        scanned: state.products.scanned
+    }
+
+}
+
+export default connect(mapStateToProps)(BarCodeScannerProduct)
 
 const opacity = 'rgba(0, 0, 0, .6)';
 const styles = StyleSheet.create({
@@ -91,3 +108,5 @@ const styles = StyleSheet.create({
     backgroundColor: opacity
   },
 });
+
+

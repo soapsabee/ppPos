@@ -7,8 +7,7 @@ export default class CardProducts extends React.Component {
 
 
     render() {
-        // const { name,cost,price,quantity } = this.props.card
-        // console.log("card :",this.props.card)
+        const { name,cost,price,quantity,barcode,imageURI } = this.props.card
 
         return (
             <View>
@@ -21,10 +20,10 @@ export default class CardProducts extends React.Component {
 
 
                             <View style={{ flexDirection: "row" }}>
-                                <Avatar.Icon size={60} icon="folder" />
+                                <Avatar.Image size={60} source={{ uri: imageURI }} />
                                 <View style={{ flexDirection: "column", marginLeft: 10 }}>
                                     <View>
-                                        <Text>ID: </Text>
+                                        <Text>บาร์โค๊ด: </Text>
                                         <Text>สินค้า:</Text>
                                         <Text>หมวด:</Text>
 
@@ -35,8 +34,8 @@ export default class CardProducts extends React.Component {
                                 </View>
                                 <View style={{ flexDirection: "column", marginLeft: 10 }}>
                                     <View>
-                                        <Text>xxxxx-xxxxxx </Text>
-                                        <Text>xxx</Text>
+                                        <Text>{barcode}</Text>
+                                        <Text>{name}</Text>
                                         <Text>อาหาร</Text>
                                     </View>
                                 </View>
@@ -56,7 +55,7 @@ export default class CardProducts extends React.Component {
                                 <Text>จำนวนเหลือ:</Text>
                             </View>
                             <View style={{ flexDirection: "column", marginLeft: 10 }}>
-                                <Text>12</Text>
+                                <Text>{price}</Text>
                                 <Text>ขาย</Text>
                                 <Text>32</Text>
                             </View>

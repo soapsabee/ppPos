@@ -131,7 +131,7 @@ export class AddProduct extends React.Component {
                             label="บาร์โค๊ด"
                             style={{ flex: 1, backgroundColor: "transparent" }}
                             onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "barcode" }))}
-
+                            value={handleInputProducts.barcode}
                         />
                         <IconButton
                             icon={require('../assets/icon/cashier/scanner.png')}

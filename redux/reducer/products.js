@@ -15,6 +15,8 @@ const initState = {
     categoryID: "",
     status: 1
   },
+  hasCameraPermission : null,
+  scanned: false
   
 }
 
