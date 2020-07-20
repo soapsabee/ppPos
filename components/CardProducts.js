@@ -2,12 +2,30 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Card, Avatar, Checkbox, Divider } from 'react-native-paper';
 import { panel } from '../styles/components/'
+import { dispatchProducts, UPDATE_BASKET_CHECKED , DELETE_BASKET_CHECKED } from '../redux/actions/'
+import { connect } from 'react-redux'
 
-export default class CardProducts extends React.Component {
+export class CardProducts extends React.Component {
 
+    state = {
+
+        checked: false
+
+    }
+
+    onCheckedBTN = (id) => {
+        this.setState({ checked: !this.state.checked })
+        if (this.state.checked == false) {
+            this.props.dispatch(dispatchProducts(UPDATE_BASKET_CHECKED, { value: id, key: "null" }))
+        }else{
+            this.props.dispatch(dispatchProducts(DELETE_BASKET_CHECKED, { value: id, key: "null" }))
+        }
+
+
+    }
 
     render() {
-        const { name,cost,price,quantity,barcode,imageURI } = this.props.card
+        const { id, name, cost, price, quantity, barcode, imageURI } = this.props.card
 
         return (
             <View>
@@ -43,7 +61,7 @@ export default class CardProducts extends React.Component {
                             </View>
 
                             <View style={{ justifyContent: "center" }}>
-                                <Checkbox onPress={() => Alert.alert("check")} />
+                                <Checkbox status={this.state.checked ? 'checked' : 'unchecked'} onPress={() => this.onCheckedBTN(id)} />
                             </View>
 
                         </View>
@@ -82,3 +100,15 @@ export default class CardProducts extends React.Component {
         )
     }
 }
+
+
+const mapStateToProps = state => {
+
+    // return state
+    return {
+        products: state.products
+    }
+
+}
+
+export default connect(mapStateToProps)(CardProducts)

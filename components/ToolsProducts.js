@@ -10,7 +10,7 @@ export default class ToolsProducts extends React.Component {
         return (
             <View style={{ alignItems: "flex-end" }} >
 
-                {/* <ToolDeleteProducts /> */}
+                <ToolDeleteProducts />
 
                 <ToolAddProducts navigation = {this.props.navigation} />
             </View>

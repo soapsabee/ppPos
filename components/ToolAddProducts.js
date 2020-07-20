@@ -8,14 +8,10 @@ export default class ToolAddProduct extends React.Component {
 
     render() {
         return (
+            <View style={{ alignItems: "flex-end" }} >
             <View style={{ flexDirection: "row", alignItems: "center", }}>
 
-                {/* <IconButton
-                    icon="pencil"
-                    color="#3366CC"
-                    size={60}
 
-                    onPress={() => console.log('Pressed')} /> */}
                 <IconButton
                     icon="plus-circle"
                     color="#6ACB9A"
@@ -24,6 +20,8 @@ export default class ToolAddProduct extends React.Component {
                     onPress={() => this.props.navigation.navigate('AddProduct')}
                 />
             </View>
+            </View>
+
         )
     }
 }

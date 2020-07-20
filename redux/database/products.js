@@ -48,3 +48,22 @@ export const productsInsert = async (actions) => {
 
 
 }
+
+export const productDelete = async (actions) =>{
+    return new Promise((resolve, reject) => {
+
+
+        db.transaction(tx => {
+
+            tx.executeSql(
+                'DELETE FROM products WHERE id = ?', [actions.id],
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}

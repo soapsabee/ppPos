@@ -2,6 +2,9 @@ import React from 'react'
 import { View, Text, Picker, ScrollView, Alert } from 'react-native'
 import { Searchbar } from 'react-native-paper';
 import ToolsProducts from '../components/ToolsProducts'
+import ToolAddProducts from '../components/ToolAddProducts'
+import ToolDeleteProducts from '../components/ToolDeleteProducts'
+
 import CardProducts from '../components/CardProducts'
 import { connect } from 'react-redux'
 import { dispatchProducts } from '../redux/actions/'
@@ -25,7 +28,9 @@ export class Products extends React.Component {
   }
 
   render() {
-    const { products } = this.props
+    const { products , basketCheckedLength } = this.props
+    console.log("count:",basketCheckedLength
+    );
     // console.log("products:",products.products)
     // products.products.map((value)=>{
 
@@ -56,8 +61,8 @@ export class Products extends React.Component {
 
 
         </ScrollView >
+        { basketCheckedLength > 0 ? <ToolDeleteProducts count={basketCheckedLength}  {...this.props} /> : <ToolAddProducts navigation = {this.props.navigation}/>  }
 
-        <ToolsProducts navigation={this.props.navigation} />
       </View>
 
 
@@ -74,7 +79,9 @@ const mapStateToProps = state => {
 
   // return state
   return {
-    products: state.products
+    products: state.products,
+    basketCheckedLength: state.products.basketChecked.length,
+    basketChecked: state.products.basketChecked
   }
 
 }
