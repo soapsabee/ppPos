@@ -9,6 +9,8 @@ export const SET_UPDATE_BASKET_CHECKED = "SET_UPDATE_BASKET_CHECKED"
 export const DELETE_BASKET_CHECKED = "DELETE_BASKET_CHECKED"
 export const SET_DELETE_BASKET_CHECKED= "SET_DELETE_BASKET_CHECKED"
 export const DELETE_PRODUCT = "DELETE_PRODUCT"
+export const CLEAR_BASKET_CHECKED = "CLEAR_BASKET_CHECKED"
+export const SET_CLEAR_BASKET_CHECKED= "SET_CLEAR_BASKET_CHECKED"
 
 export const dispatchProducts = (type,obj) => ({
     type: type,payload:obj.value,key:obj.key

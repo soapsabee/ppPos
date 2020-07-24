@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { IconButton } from 'react-native-paper';
-import { dispatchProducts , DELETE_PRODUCT} from '../redux/actions';
+import { dispatchProducts , DELETE_PRODUCT , CLEAR_BASKET_CHECKED} from '../redux/actions';
 
 
 export default class ToolDeleteProducts extends React.Component {
@@ -27,7 +27,7 @@ export default class ToolDeleteProducts extends React.Component {
                         color="black"
                         size={30}
 
-                        onPress={() => console.log('Pressed')}
+                        onPress={() => this.props.dispatch(dispatchProducts(CLEAR_BASKET_CHECKED , {value: "null", key:"null"}))}
                     />
                 </View>
             </View>

@@ -28,7 +28,7 @@ export class Products extends React.Component {
   }
 
   render() {
-    const { products , basketCheckedLength } = this.props
+    const { products , basketCheckedLength , basketChecked } = this.props
     console.log("count:",basketCheckedLength
     );
     // console.log("products:",products.products)
@@ -55,7 +55,7 @@ export class Products extends React.Component {
         </View>
 
         < ScrollView >
-          {products.products && products.products.map((value,i)=> <CardProducts key={i}  card={value} /> )}
+          {products.products && products.products.map((value,i)=> <CardProducts key={i}  card={value} checked={basketChecked.find(element => element.id == value.id)} /> )}
       
       
 

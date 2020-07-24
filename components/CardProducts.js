@@ -6,27 +6,23 @@ import { dispatchProducts, UPDATE_BASKET_CHECKED , DELETE_BASKET_CHECKED } from 
 import { connect } from 'react-redux'
 
 export class CardProducts extends React.Component {
-
-    state = {
-
-        checked: false
-
-    }
+ 
 
     onCheckedBTN = (id) => {
-        this.setState({ checked: !this.state.checked })
-        if (this.state.checked == false) {
+        if (this.props.checked == undefined) {
             this.props.dispatch(dispatchProducts(UPDATE_BASKET_CHECKED, { value: id, key: "null" }))
         }else{
             this.props.dispatch(dispatchProducts(DELETE_BASKET_CHECKED, { value: id, key: "null" }))
+            
         }
 
 
     }
 
+
     render() {
         const { id, name, cost, price, quantity, barcode, imageURI } = this.props.card
-
+        const { basketCheckedLength , basketChecked , checked} = this.props
         return (
             <View>
 
@@ -61,7 +57,7 @@ export class CardProducts extends React.Component {
                             </View>
 
                             <View style={{ justifyContent: "center" }}>
-                                <Checkbox status={this.state.checked ? 'checked' : 'unchecked'} onPress={() => this.onCheckedBTN(id)} />
+                                <Checkbox status={ this.props.checked ? 'checked' : 'unchecked'} onPress={() => this.onCheckedBTN(id)} />
                             </View>
 
                         </View>
@@ -106,7 +102,9 @@ const mapStateToProps = state => {
 
     // return state
     return {
-        products: state.products
+        products: state.products,
+        basketCheckedLength: state.products.basketChecked.length,
+        basketChecked: state.products.basketChecked
     }
 
 }

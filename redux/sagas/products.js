@@ -1,4 +1,4 @@
-import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT } from "../actions"
+import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT , CLEAR_BASKET_CHECKED , SET_CLEAR_BASKET_CHECKED } from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
 
@@ -55,8 +55,16 @@ function* deleteProduct(actions) {
 
 
     ))
+    yield setClearBasketChecked()
     yield productFetch()
     /// ทุกครั้งที่ Delete จะต้อง ไปเคลียร์ basketChecked ด้วย
+}
+
+function* setClearBasketChecked() {
+
+    yield put({ type: SET_CLEAR_BASKET_CHECKED, payload: { key: null, value: null } });
+ 
+
 }
 
 
@@ -70,6 +78,8 @@ function* actionProducts() {
     yield takeLatest(UPDATE_BASKET_CHECKED, setUpdateBasketChecked)
     yield takeLatest(DELETE_BASKET_CHECKED, setDeleteBasketChecked)
     yield takeLatest(DELETE_PRODUCT, deleteProduct)
+    yield takeLatest(CLEAR_BASKET_CHECKED, setClearBasketChecked)
+
 }
 
 
