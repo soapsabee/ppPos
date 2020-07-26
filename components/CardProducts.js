@@ -21,7 +21,7 @@ export class CardProducts extends React.Component {
 
 
     render() {
-        const { id, name, cost, price, quantity, barcode, imageURI } = this.props.card
+        const { id, name, cost, price, quantity, barcode, imageURI , categoryName, unitName } = this.props.card
         const { basketCheckedLength , basketChecked , checked} = this.props
         return (
             <View>
@@ -50,7 +50,7 @@ export class CardProducts extends React.Component {
                                     <View>
                                         <Text>{barcode}</Text>
                                         <Text>{name}</Text>
-                                        <Text>อาหาร</Text>
+                                        <Text>{categoryName}</Text>
                                     </View>
                                 </View>
 
@@ -78,7 +78,7 @@ export class CardProducts extends React.Component {
                                 <Text>ต้นทุน:</Text>
                             </View>
                             <View style={{ flexDirection: "column", marginLeft: 10 }}>
-                                <Text>กระป๋อง</Text>
+                                <Text>{unitName}</Text>
                                 <Text>10</Text>
                             </View>
 

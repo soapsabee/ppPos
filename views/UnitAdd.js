@@ -1,5 +1,5 @@
 import React from 'react'
-import ListItemCheckbox from '../components/ListItemCheckbox'
+import ListUnitsCheckbox from '../components/ListUnitsCheckbox'
 import { View, Text, ScrollView } from 'react-native'
 import { Searchbar, TextInput, IconButton, Checkbox } from 'react-native-paper';
 import { connect } from 'react-redux'
@@ -13,6 +13,9 @@ export class UnitAdd extends React.Component {
   }
 
   render() {
+
+
+    const {basketChecked} = this.props
 
     return (
       <View style={{ flex: 1, padding: 20, flexDirection: "column" }} >
@@ -37,7 +40,7 @@ export class UnitAdd extends React.Component {
 
 
         < ScrollView >
-          {this.props.units && this.props.units.map((value) => <ListItemCheckbox name={value.name} />)}
+          {this.props.units && this.props.units.map((value) => <ListUnitsCheckbox item={value} checked={basketChecked.find(element => element.unitID == value.unitID)} />)}
 
         </ScrollView >
         <View style={{ alignItems: "flex-end" }}>
@@ -57,7 +60,8 @@ const mapStateToProps = state => {
   // return state
   return {
     handleInputName: state.units.handleInputName,
-    units: state.units.units
+    units: state.units.units,
+    basketChecked: state.units.basketChecked
   }
 
 }

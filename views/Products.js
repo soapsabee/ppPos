@@ -8,7 +8,7 @@ import ToolDeleteProducts from '../components/ToolDeleteProducts'
 import CardProducts from '../components/CardProducts'
 import { connect } from 'react-redux'
 import { dispatchProducts } from '../redux/actions/'
-import { FETCH_PRODUCT, SET_PRODUCTS } from '../redux/actions'
+import { FETCH_PRODUCT, SET_PRODUCTS , SEARCH_PRODUCT, SORT_PRODUCT} from '../redux/actions'
 
 export class Products extends React.Component {
 
@@ -28,8 +28,8 @@ export class Products extends React.Component {
   }
 
   render() {
-    const { products , basketCheckedLength , basketChecked } = this.props
-    console.log("count:",basketCheckedLength
+    const { products, basketCheckedLength, basketChecked , sortProducts , categories } = this.props
+    console.log("count:", basketCheckedLength
     );
     // console.log("products:",products.products)
     // products.products.map((value)=>{
@@ -42,26 +42,26 @@ export class Products extends React.Component {
       <View style={{ flex: 1, flexDirection: "column", padding: 20 }}>
         <Searchbar
           placeholder="ค้นหาสินค้า"
-          value={this.state.search}
-          onChangeText={(search) => this.setState({ search })}
+          onChangeText={(search) => this.props.dispatch(dispatchProducts(SEARCH_PRODUCT, { value: search , key: "searchInput" }))}
         />
 
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <Picker style={{ width: 150 }} selectedValue={this.state.user} onValueChange={this.updateUser}>
-            <Picker.Item label="แสดงทั้งหมด" value="steve" />
-            <Picker.Item label="Ellen" value="ellen" />
-            <Picker.Item label="Maria" value="maria" />
+          <Picker style={{ width: 150 }} selectedValue={sortProducts} onValueChange={(sort) => this.props.dispatch(dispatchProducts(SORT_PRODUCT, { value: sort , key: "sortProducts" }))}>
+            <Picker.Item label="แสดงทั้งหมด" value="" />
+            {categories && categories.map((value) =>
+              <Picker.Item label={value.name} value={value.categoryID} />
+            )}
           </Picker>
         </View>
 
         < ScrollView >
-          {products.products && products.products.map((value,i)=> <CardProducts key={i}  card={value} checked={basketChecked.find(element => element.id == value.id)} /> )}
-      
-      
+          {products.products && products.products.map((value, i) => <CardProducts key={i} card={value} checked={basketChecked.find(element => element.id == value.id)} />)}
+
+
 
 
         </ScrollView >
-        { basketCheckedLength > 0 ? <ToolDeleteProducts count={basketCheckedLength}  {...this.props} /> : <ToolAddProducts navigation = {this.props.navigation}/>  }
+        {basketCheckedLength > 0 ? <ToolDeleteProducts count={basketCheckedLength}  {...this.props} /> : <ToolAddProducts navigation={this.props.navigation} />}
 
       </View>
 
@@ -81,7 +81,9 @@ const mapStateToProps = state => {
   return {
     products: state.products,
     basketCheckedLength: state.products.basketChecked.length,
-    basketChecked: state.products.basketChecked
+    basketChecked: state.products.basketChecked,
+    sortProducts: state.products.sortProducts,
+    categories: state.categories.categories
   }
 
 }

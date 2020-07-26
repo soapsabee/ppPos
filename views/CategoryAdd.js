@@ -1,6 +1,6 @@
 import React from 'react'
 import AddTypeProduct from '../components/AddTypeProduct'
-import ListItemCheckbox from '../components/ListItemCheckbox'
+import ListCategoryCheckbox from '../components/ListCategoryCheckbox'
 import { View, Text,ScrollView } from 'react-native'
 import { Searchbar, TextInput, IconButton, Checkbox } from 'react-native-paper';
 import { connect } from 'react-redux'
@@ -21,8 +21,7 @@ export  class CategoryAdd extends React.Component {
 
   render() {
 
-    console.log("handle:",this.props.handleInputName)
-
+    const { basketChecked ,category } = this.props
     return (
 
     
@@ -52,7 +51,7 @@ export  class CategoryAdd extends React.Component {
 
 
         < ScrollView >
-          { this.props.categoryName && this.props.categoryName.map((value)=> <ListItemCheckbox name={value.name} /> )}
+          { category && category.map((value)=> <ListCategoryCheckbox item={value}  checked={basketChecked.find(element => element.categoryID == value.categoryID)} /> )}
           
         </ScrollView >
         <View style={{alignItems:"flex-end"}}>
@@ -73,7 +72,8 @@ const mapStateToProps = state => {
   // return state
   return {
     handleInputName: state.categories.handleInputName,
-    categoryName: state.categories.categories
+    category: state.categories.categories,
+    basketChecked : state.categories.basketChecked
   }
 
 }

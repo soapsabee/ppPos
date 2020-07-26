@@ -1,4 +1,4 @@
-import { SET_PRODUCTS, SET_HANDLEINPUT_PRODUCTS, SET_UPDATE_BASKET_CHECKED , SET_DELETE_BASKET_CHECKED , SET_CLEAR_BASKET_CHECKED} from '../actions'
+import { SET_PRODUCTS, SET_HANDLEINPUT_PRODUCTS, SET_UPDATE_BASKET_CHECKED , SET_DELETE_BASKET_CHECKED , SET_CLEAR_BASKET_CHECKED ,  SEARCH_PRODUCT , SET_SEARCH_PRODUCT} from '../actions'
 
 const initState = {
 
@@ -8,7 +8,7 @@ const initState = {
     price: "",
     quantity: "",
     cost: "",
-    unit: "",
+    unitID: "",
     barcode: "",
     detail: "",
     imageURI: "",
@@ -17,7 +17,9 @@ const initState = {
   },
   basketChecked: [],
   hasCameraPermission: null,
-  scanned: false
+  scanned: false,
+  searchInput:"",
+  sortProducts:""
 
 }
 

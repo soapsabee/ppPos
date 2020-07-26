@@ -1,13 +1,28 @@
-import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT , CLEAR_BASKET_CHECKED , SET_CLEAR_BASKET_CHECKED } from "../actions"
+import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT, CLEAR_BASKET_CHECKED, SET_CLEAR_BASKET_CHECKED, SEARCH_PRODUCT, SET_SEARCH_PRODUCT , SORT_PRODUCT , SET_CATEGORYS} from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
+import { getProducts } from './selector'
+import { categoriesFetch } from "../database";
+import rootSaga from ".";
 
 function* productFetch(actions) {
 
-    // yield call(db.productsInsert)
-    const data = yield call(db.productsFetch)
-    console.log("data:", data)
+    const elementProducts = yield select(getProducts)
+    let data
+    if (elementProducts.searchInput != "" ) {
+
+        data = yield call(db.productSearch, elementProducts.searchInput )
+
+
+    } else {
+
+        data = yield call(db.productsFetch, elementProducts.sortProducts)
+        
+    }
+    
     yield put({ type: SET_PRODUCTS, payload: { key: "products", value: data } });
+    const categoryData = yield call(db.categoriesFetch)
+    yield put({ type: SET_CATEGORYS, payload: { key: "categories", value: categoryData  } });
 
 }
 
@@ -49,9 +64,9 @@ function* setDeleteBasketChecked(actions) {
 
 function* deleteProduct(actions) {
 
-    yield all(actions.payload.map(element => 
+    yield all(actions.payload.map(element =>
 
-         call(db.productDelete, element )
+        call(db.productDelete, element)
 
 
     ))
@@ -63,10 +78,16 @@ function* deleteProduct(actions) {
 function* setClearBasketChecked() {
 
     yield put({ type: SET_CLEAR_BASKET_CHECKED, payload: { key: null, value: null } });
- 
+
 
 }
 
+function* setProduct(actions) {
+
+    yield put({ type: SET_PRODUCTS, payload: { key: actions.key, value: actions.payload } });
+    yield productFetch()
+
+}
 
 
 function* actionProducts() {
@@ -79,7 +100,8 @@ function* actionProducts() {
     yield takeLatest(DELETE_BASKET_CHECKED, setDeleteBasketChecked)
     yield takeLatest(DELETE_PRODUCT, deleteProduct)
     yield takeLatest(CLEAR_BASKET_CHECKED, setClearBasketChecked)
-
+    yield takeLatest(SEARCH_PRODUCT, setProduct)
+    yield takeLatest(SORT_PRODUCT , setProduct)
 }
 
 

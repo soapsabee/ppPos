@@ -89,7 +89,7 @@ export class AddProduct extends React.Component {
                         style={{ backgroundColor: "transparent" }}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "name" }))}
                     />
-                    <Picker selectedValue={handleInputProducts.unit} onValueChange={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "unit" }))}>
+                    <Picker selectedValue={handleInputProducts.unitID} onValueChange={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "unitID" }))}>
                         <Picker.Item label="หน่วยสินค้า" value="หน่วยสินค้า" />
                         {units && units.map((value) => 
                             <Picker.Item label={value.name} value={value.unitID}/>
