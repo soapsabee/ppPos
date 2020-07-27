@@ -32,3 +32,41 @@ export const categoryInsert = (actions) => {
             (txObj, error) => console.log('Error', error))
     })
 }
+
+export const categoryDelete = async (actions) =>{
+    return new Promise((resolve, reject) => {
+
+
+        db.transaction(tx => {
+
+            tx.executeSql(
+                'DELETE FROM categories WHERE categoryID = ?', [actions.categoryID],
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}
+
+
+export const categorySearch = async (actions) => {
+    return new Promise((resolve, reject)=>{
+        
+        db.transaction(tx => {
+
+            tx.executeSql(
+                `SELECT * FROM categories WHERE name LIKE '%${actions}%' `,null,
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}

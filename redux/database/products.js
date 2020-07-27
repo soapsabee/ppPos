@@ -4,7 +4,9 @@ import * as FileSystem from 'expo-file-system';
 
 export const productsFetch = (actions) => {
     console.log("actions:",actions);
-    let sqlSelectAll = "SELECT products.id , products.name , products.price , products.quantity, products.cost , products.unitID, products.barcode, products.detail, products.imageURI,  products.status , categories.categoryID , categories.name as categoryName , units.name as unitName FROM products INNER JOIN categories ON categories.categoryID = products.categoryID INNER JOIN units ON units.unitID = products.unitID "
+    // let sqlSelectAll = "SELECT * FROM products"
+
+    let sqlSelectAll = "SELECT products.id , products.name , products.price , products.quantity, products.cost , products.unitID, products.barcode, products.detail, products.imageURI,  products.status , categories.categoryID , categories.name as categoryName , units.name as unitName FROM products LEFT JOIN categories ON products.categoryID = categories.categoryID  LEFT JOIN units ON  products.unitID = units.unitID "
    if(actions != "" ){
         sqlSelectAll += `WHERE products.categoryID = ${actions}`
         console.log("sql:",sqlSelectAll);
@@ -89,6 +91,26 @@ export const productSearch = async (actions) => {
 
             tx.executeSql(
                 `SELECT * FROM products WHERE name LIKE '%${actions}%' `,null,
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}
+
+
+export const productUpdate = async (actions) =>{
+    return new Promise((resolve, reject) => {
+
+
+        db.transaction(tx => {
+
+            tx.executeSql(
+                `UPDATE products SET ${actions.set} WHERE ${actions.where}`, null,
                 (txObj, { rows: { _array } }) => resolve(_array)
                 ,
                 (txObj, error) => console.log('Error ', error)

@@ -3,7 +3,7 @@ import ListUnitsCheckbox from '../components/ListUnitsCheckbox'
 import { View, Text, ScrollView } from 'react-native'
 import { Searchbar, TextInput, IconButton, Checkbox } from 'react-native-paper';
 import { connect } from 'react-redux'
-import { dispatchUnits, INSERT_NEW_UNIT, FETCH_UNITS, SET_HANDLEINPUTUNIT } from '../redux/actions/'
+import { dispatchUnits, INSERT_NEW_UNIT, FETCH_UNITS, SET_HANDLEINPUTUNIT , SEARCH_UNIT } from '../redux/actions/'
 import ToolDeleteProducts from '../components/ToolDeleteProducts'
 
 export class UnitAdd extends React.Component {
@@ -13,15 +13,18 @@ export class UnitAdd extends React.Component {
   }
 
   render() {
+    console.log("props:",this.props.route.name)
 
 
-    const {basketChecked} = this.props
+    const {basketChecked , basketCheckedLength} = this.props
 
     return (
       <View style={{ flex: 1, padding: 20, flexDirection: "column" }} >
 
         <Searchbar
           placeholder={`ค้นหาหน่วยสินค้า`}
+          onChangeText={(search) => this.props.dispatch(dispatchUnits(SEARCH_UNIT, { value: search , key: "searchInput" }))}
+
         />
 
         <View style={{ flexDirection: "row" }}>
@@ -45,7 +48,7 @@ export class UnitAdd extends React.Component {
         </ScrollView >
         <View style={{ alignItems: "flex-end" }}>
 
-          {/* <ToolDeleteProducts /> */}
+        {basketCheckedLength > 0 && <ToolDeleteProducts count={basketCheckedLength}  {...this.props} />  }
 
         </View>
 
@@ -61,7 +64,8 @@ const mapStateToProps = state => {
   return {
     handleInputName: state.units.handleInputName,
     units: state.units.units,
-    basketChecked: state.units.basketChecked
+    basketChecked: state.units.basketChecked,
+    basketCheckedLength : state.units.basketChecked.length
   }
 
 }

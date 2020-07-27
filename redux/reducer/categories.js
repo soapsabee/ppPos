@@ -4,7 +4,8 @@ const initState = {
 
   categories: [],
   handleInputName: "",
-  basketChecked: []
+  basketChecked: [],
+  searchInput:"",
 }
 
 const categories = (state = initState, action) => {

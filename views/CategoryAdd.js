@@ -4,7 +4,7 @@ import ListCategoryCheckbox from '../components/ListCategoryCheckbox'
 import { View, Text,ScrollView } from 'react-native'
 import { Searchbar, TextInput, IconButton, Checkbox } from 'react-native-paper';
 import { connect } from 'react-redux'
-import { dispatchCategories , INSERT_NEW_CATEGORY , FETCH_CATEGORYS , SET_HANDLEINPUTCATEGORY   } from '../redux/actions/'
+import { dispatchCategories , INSERT_NEW_CATEGORY , FETCH_CATEGORYS , SET_HANDLEINPUTCATEGORY , SEARCH_CATEGORY  } from '../redux/actions/'
 import ToolDeleteProducts from '../components/ToolDeleteProducts'
 
 export  class CategoryAdd extends React.Component {
@@ -20,8 +20,8 @@ export  class CategoryAdd extends React.Component {
   }
 
   render() {
-
-    const { basketChecked ,category } = this.props
+    console.log("props:",this.props.route.name)
+    const { basketChecked ,category , basketCheckedLength } = this.props
     return (
 
     
@@ -31,8 +31,7 @@ export  class CategoryAdd extends React.Component {
 
         <Searchbar
           placeholder={`ค้นหาหมวดหมู่สินค้า`}
-          value={this.state.search}
-          onChangeText={(search) => this.setState({ search })}
+          onChangeText={(search) => this.props.dispatch(dispatchCategories(SEARCH_CATEGORY, { value: search , key: "searchInput" }))}
         />
 
         <View style={{ flexDirection: "row" }}>
@@ -57,6 +56,7 @@ export  class CategoryAdd extends React.Component {
         <View style={{alignItems:"flex-end"}}>
 
           {/* <ToolDeleteProducts /> */}
+          {basketCheckedLength > 0 && <ToolDeleteProducts count={basketCheckedLength}  {...this.props} />  }
 
         </View>
 
@@ -73,7 +73,8 @@ const mapStateToProps = state => {
   return {
     handleInputName: state.categories.handleInputName,
     category: state.categories.categories,
-    basketChecked : state.categories.basketChecked
+    basketChecked : state.categories.basketChecked,
+    basketCheckedLength: state.categories.basketChecked.length
   }
 
 }
