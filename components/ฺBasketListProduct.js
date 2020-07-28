@@ -34,8 +34,8 @@ export default class BasketListProduct extends React.Component {
                                 <View style={{ flexDirection: "column", marginLeft: 10 }}>
                                     <View>
                                         <Text>ปลากระป๋อง </Text>
-                                        <Text>20 บาท</Text>
-                                        <Text>12 กระป๋อง</Text>
+                                        <Text>20 กระป๋อง</Text>
+                                        <Text>12 บาท</Text>
                                     </View>
                                 </View>
 

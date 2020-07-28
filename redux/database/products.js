@@ -102,6 +102,24 @@ export const productSearch = async (actions) => {
     })
 }
 
+export const productBarcodeSearch = async (actions) => {
+    return new Promise((resolve, reject)=>{
+        
+        db.transaction(tx => {
+
+            tx.executeSql(
+                `SELECT * FROM products WHERE barcode = ${actions} `,null,
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}
+
 
 export const productUpdate = async (actions) =>{
     return new Promise((resolve, reject) => {

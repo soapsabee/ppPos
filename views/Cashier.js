@@ -16,7 +16,7 @@ export default class Home extends React.Component {
       <View style={container.defaultGround}>
 
         <NumberBill/>
-        <AddProduct/>
+        <AddProduct navigation = {this.props.navigation}/>
         <PaymentPanel navigation = {this.props.navigation} />
         <BasketListProduct/>
         

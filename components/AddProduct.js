@@ -31,7 +31,7 @@ export default class AddProduct extends React.Component {
                         เพิ่มสินค้า
             </Button>
 
-                    <Button icon={require('../assets/icon/cashier/scanner.png')} style={button.btnScan} mode="contained" onPress={() => console.log('Pressed')}>
+                    <Button icon={require('../assets/icon/cashier/scanner.png')} style={button.btnScan} mode="contained"  onPress={() => this.props.navigation.navigate('BarCodeScannerProduct',{routeName: 'Cashier' })}>
                         สแกน
             </Button>
 

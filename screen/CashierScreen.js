@@ -7,6 +7,7 @@ import PaymentCashier from '../views/PaymentCashier'
 import PromptPayCashier from '../views/PromptPayCashier'
 import ConfirmPayment from '../views/ConfirmPayment'
 import { NavigationDrawer } from '../components/NavigationDrawer'
+import BarCodeScannerProduct from '../views/BarCodeScannerProduct'
 
 const Stack = createStackNavigator();
 
@@ -92,6 +93,22 @@ export const CashierScreen = ({ navigation }) => {
 
           }
           }
+        />
+
+        <Stack.Screen
+          name="BarCodeScannerProduct"
+          component={BarCodeScannerProduct}
+          options={{
+            title: 'แสกนบาร์โค๊ดสินค้า', //Set Header Title
+            headerStyle: {
+              backgroundColor: '#6BCDFD', //Set Header color
+            },
+            headerTintColor: '#fff', //Set Header text color
+            headerTitleStyle: {
+              fontFamily: "Prompt_300Light",
+
+            },
+          }}
         />
 
       </Stack.Navigator>)

@@ -138,7 +138,7 @@ export class AddProduct extends React.Component {
                             color="#3366CC"
                             size={30}
 
-                            onPress={() => this.props.navigation.navigate('BarCodeScannerProduct')}
+                            onPress={() => this.props.navigation.navigate('BarCodeScannerProduct',{routeName: 'AddProduct' })}
                         />
                     </View>
 

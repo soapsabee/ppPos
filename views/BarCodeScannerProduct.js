@@ -4,9 +4,9 @@ import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { render } from 'react-dom';
 import { connect } from 'react-redux'
-import { dispatchProducts, SET_BARCODE_SCANNER} from '../redux/actions/'
+import { dispatchProducts,dispatchCashier, SET_BARCODE_SCANNER, ADD_BASKET_CASHIER } from '../redux/actions/'
 
-export  class BarCodeScannerProduct extends React.Component {
+export class BarCodeScannerProduct extends React.Component {
     state = {
         hasCameraPermission: null,
         scanned: false,
@@ -19,12 +19,30 @@ export  class BarCodeScannerProduct extends React.Component {
 
     getPermissionsAsync = async () => {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        // this.setState({ hasCameraPermission: status === 'granted' });
-        this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: {status:status,barcode:""}, key: "hasCameraPermission" }));
+       this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: status, barcode: "" }, key: "hasCameraPermission" }));
 
+        // this.setState({ hasCameraPermission: status === 'granted' });
+        // if (this.props.route.params.routeName == "Product") {
+        //     this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: status, barcode: "" }, key: "hasCameraPermission" }));
+        // } else if (this.props.route.params.routeName == "Cashier") {
+        //     this.props.dispatch(dispatchProducts(ADD_BASKET_CASHIER, { value: { status: status, barcode: "" }, key: "hasCameraPermission" }))
+
+        // }
     };
+
+    setBarcodeScanner = () => {
+        if (this.props.route.params.routeName == "AddProduct") {
+            this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: false, barcode: "" }, key: "scanned" }))
+        } else if (this.props.route.params.routeName == "Cashier") {
+            this.props.dispatch(dispatchCashier(ADD_BASKET_CASHIER, { value: { status: false, barcode: "" }, key: "scanned" }))
+
+        }
+    }
+
     render() {
-        const { hasCameraPermission, scanned } = this.props;
+
+        console.log("route:", this.props.route.params.routeName);
+        const { hasCameraPermission, scanned , scannedCashier } = this.props;
 
         if (hasCameraPermission === null) {
             return <Text>Requesting for camera permission</Text>;
@@ -40,8 +58,8 @@ export  class BarCodeScannerProduct extends React.Component {
                     justifyContent: 'flex-end',
                 }}>
                 <BarCodeScanner
-                    onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
-                    style={ [StyleSheet.absoluteFillObject]}
+                    onBarCodeScanned={scanned || scannedCashier ? undefined : this.handleBarCodeScanned}
+                    style={[StyleSheet.absoluteFillObject]}
                 >
 
                     <View style={styles.layerTop} />
@@ -54,18 +72,25 @@ export  class BarCodeScannerProduct extends React.Component {
 
                 </BarCodeScanner>
 
-                {scanned && (
-                    <Button title={'Tap to Scan Again'} onPress={() => this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: {status:false,barcode:""}, key: "scanned" }))  } />
+                {scanned || scannedCashier && (
+                    <Button title={'Tap to Scan Again'} onPress={() => this.setBarcodeScanner()} />
                 )}
             </View>
         );
     }
 
     handleBarCodeScanned = ({ type, data }) => {
-        this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: {status:true,barcode:data}, key: "scanned" }));
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        if (this.props.route.params.routeName == "AddProduct") {
+            this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: true, barcode: data }, key: "scanned" }));
+            alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        } else if (this.props.route.params.routeName == "Cashier") {
+            this.props.dispatch(dispatchCashier(ADD_BASKET_CASHIER, { value: { status: true, barcode: data }, key: "scanned" }));
+            alert(`Bar code ADD with type ${type} and data ${data} has been scanned!`);
+        }
+
+
     };
-    
+
 }
 
 
@@ -74,7 +99,8 @@ const mapStateToProps = state => {
     // return state
     return {
         hasCameraPermission: state.products.hasCameraPermission,
-        scanned: state.products.scanned
+        scanned: state.products.scanned,
+        scannedCashier: state.cashier.scanned
     }
 
 }
@@ -84,29 +110,29 @@ export default connect(mapStateToProps)(BarCodeScannerProduct)
 const opacity = 'rgba(0, 0, 0, .6)';
 const styles = StyleSheet.create({
 
-  layerTop: {
-    flex: 2,
-    backgroundColor: opacity
-  },
-  layerCenter: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  layerLeft: {
-    flex: 1,
-    backgroundColor: opacity
-  },
-  focused: {
-    flex: 10
-  },
-  layerRight: {
-    flex: 1,
-    backgroundColor: opacity
-  },
-  layerBottom: {
-    flex: 2,
-    backgroundColor: opacity
-  },
+    layerTop: {
+        flex: 2,
+        backgroundColor: opacity
+    },
+    layerCenter: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    layerLeft: {
+        flex: 1,
+        backgroundColor: opacity
+    },
+    focused: {
+        flex: 10
+    },
+    layerRight: {
+        flex: 1,
+        backgroundColor: opacity
+    },
+    layerBottom: {
+        flex: 2,
+        backgroundColor: opacity
+    },
 });
 
 

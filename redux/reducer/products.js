@@ -19,7 +19,8 @@ const initState = {
   hasCameraPermission: null,
   scanned: false,
   searchInput:"",
-  sortProducts:""
+  sortProducts:"",
+ 
 
 }
 
