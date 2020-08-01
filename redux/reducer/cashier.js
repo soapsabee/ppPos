@@ -17,11 +17,13 @@ const cashier = (state = initState, action) => {
             return { ...state, [action.payload.key]: action.payload.value }
 
         case SET_UPDATE_BASKET_CASHIER:
+            console.log("UPDATE ACTION :",...action.payload.value);
+            // return { ...state }
             return {
-                ...state, [action.payload.key]: [...state.action.payload.key, {
+                ...state, [action.payload.key]: [...state[action.payload.key], 
 
                     ...action.payload.value
-                }]
+                ]
             }
 
         case SET_DELETE_BASKET_CASHIER:

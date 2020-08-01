@@ -1,4 +1,4 @@
-import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT, CLEAR_BASKET_CHECKED, SET_CLEAR_BASKET_CHECKED, SEARCH_PRODUCT, SET_SEARCH_PRODUCT , SORT_PRODUCT , SET_CATEGORYS} from "../actions"
+import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT, CLEAR_BASKET_CHECKED, SET_CLEAR_BASKET_CHECKED, SEARCH_PRODUCT, SET_SEARCH_PRODUCT , SORT_PRODUCT , SET_CATEGORYS , ADD_BASKET_CASHIER , SET_UPDATE_CASHIER} from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
 import { getProducts } from './selector'
@@ -89,6 +89,17 @@ function* setProduct(actions) {
 
 }
 
+function* setAddBasketCashier(actions) {
+
+    yield put({ type: SET_PRODUCTS, payload: { key: actions.key, value: actions.payload.status } });
+    if (actions.key === "scanned" && actions.payload.status == true) {
+        let data = yield call(db.productBarcodeSearch, actions.payload.barcode)
+        yield put({ type: SET_UPDATE_CASHIER, payload: { key: "cashier", value: data } });
+    }
+
+}
+
+
 
 function* actionProducts() {
 
@@ -102,6 +113,7 @@ function* actionProducts() {
     yield takeLatest(CLEAR_BASKET_CHECKED, setClearBasketChecked)
     yield takeLatest(SEARCH_PRODUCT, setProduct)
     yield takeLatest(SORT_PRODUCT , setProduct)
+    yield takeLatest(ADD_BASKET_CASHIER,setAddBasketCashier )
 }
 
 

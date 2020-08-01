@@ -22,7 +22,6 @@ export class CardProducts extends React.Component {
 
     render() {
         const { id, name, cost, price, quantity, barcode, imageURI , categoryName, unitName } = this.props.card
-        const { basketCheckedLength , basketChecked , checked} = this.props
         return (
             <View>
 

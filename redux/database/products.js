@@ -108,7 +108,7 @@ export const productBarcodeSearch = async (actions) => {
         db.transaction(tx => {
 
             tx.executeSql(
-                `SELECT * FROM products WHERE barcode = ${actions} `,null,
+                `SELECT products.id , products.name , products.price , products.quantity, products.cost , products.unitID, products.barcode, products.detail, products.imageURI,  products.status , categories.categoryID , categories.name as categoryName , units.name as unitName FROM products LEFT JOIN categories ON products.categoryID = categories.categoryID  LEFT JOIN units ON  products.unitID = units.unitID WHERE products.barcode = ${actions} `,null,
                 (txObj, { rows: { _array } }) => resolve(_array)
                 ,
                 (txObj, error) => console.log('Error ', error)

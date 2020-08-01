@@ -14,6 +14,8 @@ export const SET_CLEAR_BASKET_CHECKED= "SET_CLEAR_BASKET_CHECKED"
 export const SEARCH_PRODUCT = "SEARCH_PRODUCT"
 export const SET_SEARCH_PRODUCT = "SET_SEARCH_PRODUCT"
 export const SORT_PRODUCT = "SORT_PRODUCT"
+export const SET_UPDATE_CASHIER = "SET_UPDATE_CASHIER"
+export const ADD_BASKET_CASHIER = "ADD_BASKET_CASHIER"
 
 export const dispatchProducts = (type,obj) => ({
     type: type,payload:obj.value,key:obj.key

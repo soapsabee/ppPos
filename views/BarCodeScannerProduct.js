@@ -34,7 +34,7 @@ export class BarCodeScannerProduct extends React.Component {
         if (this.props.route.params.routeName == "AddProduct") {
             this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: false, barcode: "" }, key: "scanned" }))
         } else if (this.props.route.params.routeName == "Cashier") {
-            this.props.dispatch(dispatchCashier(ADD_BASKET_CASHIER, { value: { status: false, barcode: "" }, key: "scanned" }))
+            this.props.dispatch(dispatchProducts(ADD_BASKET_CASHIER, { value: { status: false, barcode: "" }, key: "scanned" }))
 
         }
     }
@@ -42,7 +42,7 @@ export class BarCodeScannerProduct extends React.Component {
     render() {
 
         console.log("route:", this.props.route.params.routeName);
-        const { hasCameraPermission, scanned , scannedCashier } = this.props;
+        const { hasCameraPermission, scanned } = this.props;
 
         if (hasCameraPermission === null) {
             return <Text>Requesting for camera permission</Text>;
@@ -58,7 +58,7 @@ export class BarCodeScannerProduct extends React.Component {
                     justifyContent: 'flex-end',
                 }}>
                 <BarCodeScanner
-                    onBarCodeScanned={scanned || scannedCashier ? undefined : this.handleBarCodeScanned}
+                    onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
                     style={[StyleSheet.absoluteFillObject]}
                 >
 
@@ -72,8 +72,8 @@ export class BarCodeScannerProduct extends React.Component {
 
                 </BarCodeScanner>
 
-                {scanned || scannedCashier && (
-                    <Button title={'Tap to Scan Again'} onPress={() => this.setBarcodeScanner()} />
+                {scanned && (
+                    <Button title={'Tap to Scan'} onPress={() => this.setBarcodeScanner()} />
                 )}
             </View>
         );
@@ -84,7 +84,7 @@ export class BarCodeScannerProduct extends React.Component {
             this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: true, barcode: data }, key: "scanned" }));
             alert(`Bar code with type ${type} and data ${data} has been scanned!`);
         } else if (this.props.route.params.routeName == "Cashier") {
-            this.props.dispatch(dispatchCashier(ADD_BASKET_CASHIER, { value: { status: true, barcode: data }, key: "scanned" }));
+            this.props.dispatch(dispatchProducts(ADD_BASKET_CASHIER, { value: { status: true, barcode: data }, key: "scanned" }));
             alert(`Bar code ADD with type ${type} and data ${data} has been scanned!`);
         }
 
@@ -99,8 +99,8 @@ const mapStateToProps = state => {
     // return state
     return {
         hasCameraPermission: state.products.hasCameraPermission,
-        scanned: state.products.scanned,
-        scannedCashier: state.cashier.scanned
+        scanned: state.products.scanned
+        
     }
 
 }
