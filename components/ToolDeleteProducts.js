@@ -29,7 +29,7 @@ export default class ToolDeleteProducts extends React.Component {
                             color="black"
                             size={30}
 
-                            onPress={() => this.props.dispatch(dispatchProducts(CLEAR_BASKET_CHECKED, { value: "null", key: "null" }))}
+                            onPress={() => this.props.dispatch(dispatchProducts(CLEAR_BASKET_CHECKED, { value: "null", key: "basketChecked" }))}
                         />
 
                     </View>

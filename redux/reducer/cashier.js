@@ -1,4 +1,4 @@
-import { SET_CASHIER , SET_UPDATE_BASKET_CASHIER , SET_DELETE_BASKET_CASHIER , SET_CLEAR_BASKET_CASHIER } from '../actions'
+import { SET_CASHIER , SET_UPDATE_BASKET_CASHIER  , SET_CLEAR_BASKET_CASHIER } from '../actions'
 
 const initState = {
     cashier: [],
@@ -24,12 +24,6 @@ const cashier = (state = initState, action) => {
 
                     ...action.payload.value
                 ]
-            }
-
-        case SET_DELETE_BASKET_CASHIER:
-
-            return {
-                ...state, [action.payload.key]: state.action.payload.key.filter(element => element.id !== action.payload.value)
             }
 
         case SET_CLEAR_BASKET_CASHIER:

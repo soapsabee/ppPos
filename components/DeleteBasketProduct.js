@@ -2,9 +2,9 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Button  } from 'react-native-paper';
 import {  button,  panel,  text } from '../styles/components/'
+import { dispatchProducts , CLEAR_BASKET_CHECKED , DELETE_CASHIER} from '../redux/actions';
 
-
-export default class PaymentPanel extends React.Component {
+export default class DeleteBasketProduct extends React.Component {
 
     render(){
         return (
@@ -20,7 +20,7 @@ export default class PaymentPanel extends React.Component {
 
               </View>
   
-              <Button style={button.btnDelete} mode="contained" onPress={() => console.log('Pressed')}>
+              <Button style={button.btnDelete} mode="contained" onPress={() => this.props.dispatch(dispatchProducts(DELETE_CASHIER, { value: this.props.cashierChecked, key: "null" }))}>
                 ลบ
             </Button>
   
@@ -28,7 +28,7 @@ export default class PaymentPanel extends React.Component {
   
             <View style={panel.panel_column_around}>
   
-              <Button style={button.btnCancelDelete} mode="contained" onPress={() => console.log('Pressed')}>
+              <Button style={button.btnCancelDelete} mode="contained" onPress={() => this.props.dispatch(dispatchProducts(CLEAR_BASKET_CHECKED, { value: "null", key: "cashierChecked" }))}>
                 ยกเลิกการลบ
             </Button>
            

@@ -1,4 +1,9 @@
-import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT, CLEAR_BASKET_CHECKED, SET_CLEAR_BASKET_CHECKED, SEARCH_PRODUCT, SET_SEARCH_PRODUCT , SORT_PRODUCT , SET_CATEGORYS , ADD_BASKET_CASHIER , SET_UPDATE_CASHIER} from "../actions"
+import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, 
+    SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT, CLEAR_BASKET_CHECKED, 
+    SET_CLEAR_BASKET_PRODUCTS, SEARCH_PRODUCT, SET_SEARCH_PRODUCT, SORT_PRODUCT, SET_CATEGORYS, 
+    ADD_BASKET_CASHIER, SET_UPDATE_CASHIER, 
+    INCREASE_TOTAL_CASHIER, CLEAR_CASHIER ,
+    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER } from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
 import { getProducts } from './selector'
@@ -9,20 +14,20 @@ function* productFetch(actions) {
 
     const elementProducts = yield select(getProducts)
     let data
-    if (elementProducts.searchInput != "" ) {
+    if (elementProducts.searchInput != "") {
 
-        data = yield call(db.productSearch, elementProducts.searchInput )
+        data = yield call(db.productSearch, elementProducts.searchInput)
 
 
     } else {
 
         data = yield call(db.productsFetch, elementProducts.sortProducts)
-        
+
     }
-    
+
     yield put({ type: SET_PRODUCTS, payload: { key: "products", value: data } });
     const categoryData = yield call(db.categoriesFetch)
-    yield put({ type: SET_CATEGORYS, payload: { key: "categories", value: categoryData  } });
+    yield put({ type: SET_CATEGORYS, payload: { key: "categories", value: categoryData } });
 
 }
 
@@ -50,14 +55,14 @@ function* setBarcodeScanner(actions) {
 
 function* setUpdateBasketChecked(actions) {
 
-    yield put({ type: SET_UPDATE_BASKET_CHECKED, payload: { key: null, value: actions.payload } });
+    yield put({ type: SET_UPDATE_BASKET_CHECKED, payload: { key: actions.key, value: actions.payload } });
 
 
 }
 
 function* setDeleteBasketChecked(actions) {
 
-    yield put({ type: SET_DELETE_BASKET_CHECKED, payload: { key: null, value: actions.payload } });
+    yield put({ type: SET_DELETE_BASKET_CHECKED, payload: { key: actions.key, value: actions.payload } });
 
 
 }
@@ -70,17 +75,28 @@ function* deleteProduct(actions) {
 
 
     ))
-    yield setClearBasketChecked()
+    yield setClearProducts({ key: "basketChecked", value: null })
     yield productFetch()
     /// ทุกครั้งที่ Delete จะต้อง ไปเคลียร์ basketChecked ด้วย
 }
 
-function* setClearBasketChecked() {
 
-    yield put({ type: SET_CLEAR_BASKET_CHECKED, payload: { key: null, value: null } });
+
+function* setClearProducts(actions) {
+
+    yield put({ type: SET_CLEAR_BASKET_PRODUCTS, payload: { key: actions.key, value: null } });
 
 
 }
+
+function* setClearCashier() {
+
+    yield setClearProducts({ key: "cashier", value: "null" })
+    yield setClearProducts({ key: "cashierChecked", value: "null" })
+    yield setClearProducts({ key: "totalCashier", value: 0 })
+}
+
+
 
 function* setProduct(actions) {
 
@@ -94,11 +110,24 @@ function* setAddBasketCashier(actions) {
     yield put({ type: SET_PRODUCTS, payload: { key: actions.key, value: actions.payload.status } });
     if (actions.key === "scanned" && actions.payload.status == true) {
         let data = yield call(db.productBarcodeSearch, actions.payload.barcode)
-        yield put({ type: SET_UPDATE_CASHIER, payload: { key: "cashier", value: data } });
+        if (data.length > 0) {
+            yield put({ type: SET_UPDATE_CASHIER, payload: { key: "cashier", value: data } });
+            yield put({ type: INCREASE_TOTAL_CASHIER, payload: { key: "null", value: data[0].price } })
+        }
+
     }
 
 }
 
+
+function* deleteCashier(actions) { 
+    yield all(actions.payload.map(element =>
+           put({ type: SET_DELETE_BASKET_CASHIER, payload: { key: "null", value: element } })
+
+    ))
+    yield setClearProducts({ key: "cashierChecked", value: "null" })
+
+}
 
 
 function* actionProducts() {
@@ -110,10 +139,12 @@ function* actionProducts() {
     yield takeLatest(UPDATE_BASKET_CHECKED, setUpdateBasketChecked)
     yield takeLatest(DELETE_BASKET_CHECKED, setDeleteBasketChecked)
     yield takeLatest(DELETE_PRODUCT, deleteProduct)
-    yield takeLatest(CLEAR_BASKET_CHECKED, setClearBasketChecked)
+    yield takeLatest(CLEAR_BASKET_CHECKED, setClearProducts)
     yield takeLatest(SEARCH_PRODUCT, setProduct)
-    yield takeLatest(SORT_PRODUCT , setProduct)
-    yield takeLatest(ADD_BASKET_CASHIER,setAddBasketCashier )
+    yield takeLatest(SORT_PRODUCT, setProduct)
+    yield takeLatest(ADD_BASKET_CASHIER, setAddBasketCashier)
+    yield takeLatest(CLEAR_CASHIER, setClearCashier)
+    yield takeLatest(DELETE_CASHIER, deleteCashier)
 }
 
 

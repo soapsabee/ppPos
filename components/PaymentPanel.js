@@ -2,6 +2,8 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Button  } from 'react-native-paper';
 import {  button,  panel,  text } from '../styles/components/'
+import { connect } from 'react-redux'
+import { dispatchProducts , CLEAR_CASHIER} from '../redux/actions';
 
 
 export default class PaymentPanel extends React.Component {
@@ -17,11 +19,11 @@ export default class PaymentPanel extends React.Component {
                 <Text >
                   รวม
               </Text>
-                <Text style={text.textTotal}>800</Text>
+                <Text style={text.textTotal}>{this.props.totalCashier}</Text>
   
               </View>
   
-              <Button style={button.btnDelete} mode="contained" onPress={() => console.log('Pressed')}>
+              <Button style={button.btnDelete} mode="contained" onPress={() => this.props.dispatch(dispatchProducts(CLEAR_CASHIER, { value: "null", key: "null" }))}>
                 ยกเลิก
             </Button>
   
@@ -43,3 +45,5 @@ export default class PaymentPanel extends React.Component {
     }
 
 } 
+
+

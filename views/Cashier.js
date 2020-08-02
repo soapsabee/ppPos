@@ -14,17 +14,25 @@ export class Cashier extends React.Component {
 
   render() {
 
-    const { cashier } = this.props
+    const { cashier, cashierChecked } = this.props
     return (
       <View style={{ flex: 1 }}>
 
         <NumberBill />
         <AddProduct navigation={this.props.navigation} />
-        <PaymentPanel navigation={this.props.navigation} />
-        <View>
-          <BasketListProduct cashier={cashier} />
+        {(cashier.length > 0 && cashierChecked.length == 0) &&
+          <PaymentPanel navigation={this.props.navigation} {...this.props} />
+        }
 
+        {
+          (cashierChecked.length > 0 )&&
+          <DeleteBasketProduct dispatch={this.props.dispatch} cashierChecked={cashierChecked}/>
+        }
+
+        <View>
+          <BasketListProduct cashier={cashier} cashierChecked={cashierChecked} dispatch={this.props.dispatch} />
         </View>
+
 
       </View>
 
@@ -36,7 +44,9 @@ const mapStateToProps = state => {
 
   // return state
   return {
-    cashier: state.products.cashier
+    cashier: state.products.cashier,
+    totalCashier: state.products.totalCashier,
+    cashierChecked: state.products.cashierChecked
   }
 
 }

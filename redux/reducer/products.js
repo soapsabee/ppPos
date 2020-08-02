@@ -1,4 +1,8 @@
-import { SET_PRODUCTS, SET_HANDLEINPUT_PRODUCTS, SET_UPDATE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, SET_CLEAR_BASKET_CHECKED, SEARCH_PRODUCT, SET_SEARCH_PRODUCT , SET_UPDATE_CASHIER} from '../actions'
+import {
+  SET_PRODUCTS, SET_HANDLEINPUT_PRODUCTS, SET_UPDATE_BASKET_CHECKED,
+  SET_DELETE_BASKET_CHECKED, SET_CLEAR_BASKET_PRODUCTS, SET_UPDATE_CASHIER,
+  INCREASE_TOTAL_CASHIER, SET_UPDATE_BASKET_CASHIER , SET_DELETE_BASKET_CASHIER
+} from '../actions'
 
 const initState = {
 
@@ -16,6 +20,7 @@ const initState = {
     status: 1
   },
   basketChecked: [],
+  cashierChecked: [],
   hasCameraPermission: null,
   scanned: true,
   searchInput: "",
@@ -44,26 +49,40 @@ const products = (state = initState, action) => {
       }
     case SET_UPDATE_BASKET_CHECKED:
       return {
-        ...state, basketChecked: [...state.basketChecked, {
+        ...state, [action.payload.key]: [...state[action.payload.key], {
 
           id: action.payload.value
         }]
       }
+
     case SET_UPDATE_CASHIER:
       return {
         ...state, [action.payload.key]: [...state[action.payload.key],
 
-          ...action.payload.value
+        ...action.payload.value
         ]
       }
     case SET_DELETE_BASKET_CHECKED:
 
       return {
-        ...state, basketChecked: state.basketChecked.filter(element => element.id !== action.payload.value)
+        ...state, [action.payload.key]: state[action.payload.key].filter(element => element.id !== action.payload.value)
       }
-    case SET_CLEAR_BASKET_CHECKED:
+    case SET_DELETE_BASKET_CASHIER:
       return {
-        ...state, basketChecked: initState.basketChecked
+        ...state,cashier:
+        [
+          ...state.cashier.slice(0,action.payload.value.id),
+          ...state.cashier.slice(action.payload.value.id + 1)
+        ]
+      }
+ 
+    case SET_CLEAR_BASKET_PRODUCTS:
+      return {
+        ...state, [action.payload.key]: initState[action.payload.key]
+      }
+    case INCREASE_TOTAL_CASHIER:
+      return {
+        ...state, totalCashier: state.totalCashier += action.payload.value
       }
 
     default:

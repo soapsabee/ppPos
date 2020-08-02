@@ -10,9 +10,9 @@ export class CardProducts extends React.Component {
 
     onCheckedBTN = (id) => {
         if (this.props.checked == undefined) {
-            this.props.dispatch(dispatchProducts(UPDATE_BASKET_CHECKED, { value: id, key: "null" }))
+            this.props.dispatch(dispatchProducts(UPDATE_BASKET_CHECKED, { value: id, key: "basketChecked" }))
         }else{
-            this.props.dispatch(dispatchProducts(DELETE_BASKET_CHECKED, { value: id, key: "null" }))
+            this.props.dispatch(dispatchProducts(DELETE_BASKET_CHECKED, { value: id, key: "basketChecked" }))
             
         }
 

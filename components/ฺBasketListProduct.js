@@ -14,16 +14,17 @@ export default class BasketListProduct extends React.Component {
             <View >
                 <View style={text.headerListProduct}>
                     <Text>รายการสินค้า</Text>
-                    <Text style={text.textTotal}>2</Text>
+                    <Text style={text.textTotal}>{this.props.cashier.length}</Text>
                     <Text>รายการ</Text>
-                </View>
-                
-                < ScrollView >
-                    {this.props.cashier && this.props.cashier.map((value) => <CardCashier value={value}/>)}
-                    
+                </View>    
+                <ScrollView >
+
+                    {this.props.cashier && this.props.cashier.map((value,key) => <CardCashier keys={key} value={value} checked={this.props.cashierChecked.find(element => element.id == key  )} dispatch = {this.props.dispatch}/>)}
+
                 </ScrollView >
             </View>
 
         )
     }
 }
+
