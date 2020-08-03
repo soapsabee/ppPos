@@ -33,14 +33,39 @@ function* productFetch(actions) {
 
 function* setHandleInputProducts(actions) {
 
-    yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { key: actions.key, value: actions.payload } });
+    yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "handleInputProducts" , key: actions.key, value: actions.payload } });
+    if(actions.key == "name" || actions.key == "price" || actions.key == "quantity" || actions.key == "cost" || actions.key == "barcode"){
+       
+       actions.payload == "" ? 
+       yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "errorField" , key: actions.key, value: true } })
+       :
+       yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "errorField" , key: actions.key, value: false } })
 
+    }
 }
 
 function* insertNewProduct(actions) {
-    yield call(db.productsInsert, actions)
-    yield productFetch()
-    // yield put({ type: INSERT_NEW_PRODUCT, payload: { key: actions.key, value: actions.payload  } });
+
+    const elementProducts = yield select(getProducts)
+    let validInsert = false
+    yield all(Object.keys(elementProducts.handleInputProducts).map(element =>{
+        
+        if(element == "name" || element == "price" || element == "quantity" || element == "cost" || element== "barcode"){
+       
+            if(elementProducts.handleInputProducts[element] == ""){
+                validInsert = true
+                console.log("validInsert: true");
+            }
+         }
+
+    }))
+
+    
+     validInsert == true  ? console.log("Insert Not Pass") : console.log("Insert Pass")
+
+
+    // yield call(db.productsInsert, actions)
+    // yield productFetch()
 
 }
 

@@ -1,7 +1,7 @@
 import {
   SET_PRODUCTS, SET_HANDLEINPUT_PRODUCTS, SET_UPDATE_BASKET_CHECKED,
   SET_DELETE_BASKET_CHECKED, SET_CLEAR_BASKET_PRODUCTS, SET_UPDATE_CASHIER,
-  INCREASE_TOTAL_CASHIER, SET_UPDATE_BASKET_CASHIER , SET_DELETE_BASKET_CASHIER
+  INCREASE_TOTAL_CASHIER, SET_UPDATE_BASKET_CASHIER, SET_DELETE_BASKET_CASHIER
 } from '../actions'
 
 const initState = {
@@ -21,6 +21,14 @@ const initState = {
   },
   basketChecked: [],
   cashierChecked: [],
+  errorField: {
+    name: false,
+    price: false,
+    quantity: false,
+    cost: false,
+    barcode: false
+  },
+  startedValid: false,
   hasCameraPermission: null,
   scanned: true,
   searchInput: "",
@@ -42,8 +50,8 @@ const products = (state = initState, action) => {
       return { ...state, [key]: value }
     case SET_HANDLEINPUT_PRODUCTS:
       return {
-        ...state, handleInputProducts: {
-          ...state.handleInputProducts,
+        ...state, [action.payload.headkey]: {
+          ...state[action.payload.headkey],
           [action.payload.key]: action.payload.value
         }
       }
@@ -69,13 +77,13 @@ const products = (state = initState, action) => {
       }
     case SET_DELETE_BASKET_CASHIER:
       return {
-        ...state,cashier:
-        [
-          ...state.cashier.slice(0,action.payload.value.id),
-          ...state.cashier.slice(action.payload.value.id + 1)
-        ]
+        ...state, cashier:
+          [
+            ...state.cashier.slice(0, action.payload.value.id),
+            ...state.cashier.slice(action.payload.value.id + 1)
+          ]
       }
- 
+
     case SET_CLEAR_BASKET_PRODUCTS:
       return {
         ...state, [action.payload.key]: initState[action.payload.key]

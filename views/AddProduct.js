@@ -53,21 +53,22 @@ export class AddProduct extends React.Component {
 
 
     render() {
-        const { handleInputProducts, categories , units} = this.props
+        const { handleInputProducts, categories, units, errorField } = this.props
         console.log("categories", categories)
         return (
             < ScrollView >
-                <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
 
+                 
+                        <Image style={{
+                            borderStyle: "solid", borderWidth: 1, marginTop: 30, borderColor: "#D9D9D9",
+                            width: 150,
+                            height: 150,
+                            resizeMode: 'contain',
+                            
+                        }} source={handleInputProducts.imageURI == "" ? require('../assets/qr_code.png') : { uri: handleInputProducts.imageURI }} />
 
-                    <Image style={{
-                        borderStyle: "solid", borderWidth: 1, marginTop: 30, borderColor: "#D9D9D9",
-                        width: 150,
-                        height: 150,
-                        resizeMode: 'contain',
-                        justifyContent: "center"
-                    }} source={{ uri: handleInputProducts.imageURI }} />
-
+                
                     <IconButton
                         icon="image"
                         color="#3366CC"
@@ -85,27 +86,29 @@ export class AddProduct extends React.Component {
                     </View>
 
                     <TextInput
-                        label="ชื่อสินค้า"
+                        label={errorField.name ? "ชื่อสินค้า (ห้ามเว้นว่าง)" : "ชื่อสินค้า"}
                         style={{ backgroundColor: "transparent" }}
+                        error={errorField.name}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "name" }))}
                     />
+
                     <Picker selectedValue={handleInputProducts.unitID} onValueChange={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "unitID" }))}>
                         <Picker.Item label="หน่วยสินค้า" value="หน่วยสินค้า" />
-                        {units && units.map((value) => 
-                            <Picker.Item label={value.name} value={value.unitID}/>
+                        {units && units.map((value) =>
+                            <Picker.Item label={value.name} value={value.unitID} />
                         )}
                     </Picker>
                     <Picker selectedValue={handleInputProducts.categoryID} onValueChange={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "categoryID" }))}>
                         <Picker.Item label="หมวดหมู่" value="หมวดหมู่" />
-                        {categories && categories.map((value) => 
-                            <Picker.Item label={value.name} value={value.categoryID}/>
+                        {categories && categories.map((value) =>
+                            <Picker.Item label={value.name} value={value.categoryID} />
                         )}
                     </Picker>
 
                     <TextInput
                         label="ราคา"
                         keyboardType='numeric'
-
+                        error={errorField.price}
                         style={{ backgroundColor: "transparent" }}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "price" }))}
 
@@ -113,6 +116,7 @@ export class AddProduct extends React.Component {
 
                     <TextInput
                         label="ต้นทุน"
+                        error={errorField.cost}
                         keyboardType='numeric'
                         style={{ backgroundColor: "transparent" }}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "cost" }))}
@@ -121,6 +125,7 @@ export class AddProduct extends React.Component {
 
                     <TextInput
                         label="จำนวนในคลัง"
+                        error={errorField.quantity}
                         keyboardType='numeric'
                         style={{ backgroundColor: "transparent" }}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "quantity" }))}
@@ -129,6 +134,7 @@ export class AddProduct extends React.Component {
                     <View style={{ flexDirection: "row" }}>
                         <TextInput
                             label="บาร์โค๊ด"
+                            error={errorField.barcode}
                             style={{ flex: 1, backgroundColor: "transparent" }}
                             onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "barcode" }))}
                             value={handleInputProducts.barcode}
@@ -138,7 +144,7 @@ export class AddProduct extends React.Component {
                             color="#3366CC"
                             size={30}
 
-                            onPress={() => this.props.navigation.navigate('BarCodeScannerProduct',{routeName: 'AddProduct' })}
+                            onPress={() => this.props.navigation.navigate('BarCodeScannerProduct', { routeName: 'AddProduct' })}
                         />
                     </View>
 
@@ -152,7 +158,9 @@ export class AddProduct extends React.Component {
                     />
 
                 </View>
-                <Button style={{ position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: "#6ACA6B" }} contentStyle={{ height: 60 }} mode="contained" onPress={() => this.props.dispatch(dispatchProducts(INSERT_NEW_PRODUCT, { value: handleInputProducts, key: null }))}>
+                <Button style={{ position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: "#6ACA6B" }}
+                    contentStyle={{ height: 60 }} mode="contained"
+                    onPress={() => this.props.dispatch(dispatchProducts(INSERT_NEW_PRODUCT, { value: handleInputProducts, key: null }))}>
                     เพิ่มสินค้า
                  </Button>
 
@@ -172,7 +180,8 @@ const mapStateToProps = state => {
     return {
         handleInputProducts: state.products.handleInputProducts,
         categories: state.categories.categories,
-        units: state.units.units
+        units: state.units.units,
+        errorField: state.products.errorField
     }
 
 }
