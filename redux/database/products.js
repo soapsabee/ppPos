@@ -139,3 +139,22 @@ export const productUpdate = async (actions) =>{
 
     })
 }
+
+export const productDuplicate = async (actions) =>{
+    return new Promise((resolve, reject) => {
+
+
+        db.transaction(tx => {
+
+            tx.executeSql(
+                `SELECT * FROM products WHERE ${actions.where} = '${actions.value}' `, null,
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}

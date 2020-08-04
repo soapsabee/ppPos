@@ -1,9 +1,11 @@
-import { FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED, 
-    SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT, CLEAR_BASKET_CHECKED, 
-    SET_CLEAR_BASKET_PRODUCTS, SEARCH_PRODUCT, SET_SEARCH_PRODUCT, SORT_PRODUCT, SET_CATEGORYS, 
-    ADD_BASKET_CASHIER, SET_UPDATE_CASHIER, 
-    INCREASE_TOTAL_CASHIER, CLEAR_CASHIER ,
-    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER } from "../actions"
+import {
+    FETCH_PRODUCT, SET_PRODUCTS, SET_HANDLEINPUTPRODUCTS, SET_HANDLEINPUT_PRODUCTS, INSERT_NEW_PRODUCT, SET_BARCODE_SCANNER, UPDATE_BASKET_CHECKED,
+    SET_UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED, SET_DELETE_BASKET_CHECKED, DELETE_PRODUCT, CLEAR_BASKET_CHECKED,
+    SET_CLEAR_BASKET_PRODUCTS, SEARCH_PRODUCT, SET_SEARCH_PRODUCT, SORT_PRODUCT, SET_CATEGORYS,
+    ADD_BASKET_CASHIER, SET_UPDATE_CASHIER,
+    INCREASE_TOTAL_CASHIER, CLEAR_CASHIER,
+    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, DIALOG_ADDPRODUCT
+} from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
 import { getProducts } from './selector'
@@ -33,14 +35,26 @@ function* productFetch(actions) {
 
 function* setHandleInputProducts(actions) {
 
-    yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "handleInputProducts" , key: actions.key, value: actions.payload } });
-    if(actions.key == "name" || actions.key == "price" || actions.key == "quantity" || actions.key == "cost" || actions.key == "barcode"){
-       
-       actions.payload == "" ? 
-       yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "errorField" , key: actions.key, value: true } })
-       :
-       yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "errorField" , key: actions.key, value: false } })
+    yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "handleInputProducts", key: actions.key, value: actions.payload } });
+    if (actions.key == "name" || actions.key == "price" || actions.key == "quantity" || actions.key == "cost" || actions.key == "barcode") {
 
+        actions.payload == "" ?
+            yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "errorField", key: actions.key, value: true } })
+            :
+            yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "errorField", key: actions.key, value: false } })
+
+    }
+
+    if (actions.key == "name" || actions.key == "barcode") {
+        let data = yield call(db.productDuplicate, { where: actions.key, value: actions.payload })
+        if (data.length > 0) {
+            yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "errorField", key: actions.key, value: true } })
+            yield put({ type: SET_PRODUCTS, payload: { key: actions.key =="name" ? "duplicateAddName" : "duplicateBarcode", value: true } });
+
+        }else{
+            yield put({ type: SET_PRODUCTS, payload: { key: actions.key =="name" ? "duplicateAddName" : "duplicateBarcode", value: false } });
+
+        }
     }
 }
 
@@ -48,20 +62,22 @@ function* insertNewProduct(actions) {
 
     const elementProducts = yield select(getProducts)
     let validInsert = false
-    yield all(Object.keys(elementProducts.handleInputProducts).map(element =>{
-        
-        if(element == "name" || element == "price" || element == "quantity" || element == "cost" || element== "barcode"){
-       
-            if(elementProducts.handleInputProducts[element] == ""){
+    yield all(Object.keys(elementProducts.handleInputProducts).map(element => {
+
+        if (element == "name" || element == "price" || element == "quantity" || element == "cost" || element == "barcode") {
+
+            if (elementProducts.handleInputProducts[element] == "") {
                 validInsert = true
-                console.log("validInsert: true");
+
             }
-         }
+        }
 
     }))
-
     
-     validInsert == true  ? console.log("Insert Not Pass") : console.log("Insert Pass")
+   if(elementProducts.duplicateAddName || elementProducts.duplicateBarcode ) validInsert = true 
+
+
+    validInsert ? yield put({ type: SET_PRODUCTS, payload: { key: "dialogAlertAddProduct", value: true } }) : console.log("Insert Pass")
 
 
     // yield call(db.productsInsert, actions)
@@ -130,6 +146,12 @@ function* setProduct(actions) {
 
 }
 
+function* setDialog(actions) {
+    yield put({ type: SET_PRODUCTS, payload: { key: actions.key, value: actions.payload } });
+
+}
+
+
 function* setAddBasketCashier(actions) {
 
     yield put({ type: SET_PRODUCTS, payload: { key: actions.key, value: actions.payload.status } });
@@ -145,9 +167,9 @@ function* setAddBasketCashier(actions) {
 }
 
 
-function* deleteCashier(actions) { 
+function* deleteCashier(actions) {
     yield all(actions.payload.map(element =>
-           put({ type: SET_DELETE_BASKET_CASHIER, payload: { key: "null", value: element } })
+        put({ type: SET_DELETE_BASKET_CASHIER, payload: { key: "null", value: element } })
 
     ))
     yield setClearProducts({ key: "cashierChecked", value: "null" })
@@ -170,6 +192,7 @@ function* actionProducts() {
     yield takeLatest(ADD_BASKET_CASHIER, setAddBasketCashier)
     yield takeLatest(CLEAR_CASHIER, setClearCashier)
     yield takeLatest(DELETE_CASHIER, deleteCashier)
+    yield takeLatest(DIALOG_ADDPRODUCT, setDialog)
 }
 
 

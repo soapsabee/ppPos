@@ -4,7 +4,7 @@ import { IconButton, TextInput, Switch, Button } from 'react-native-paper';
 import { connect } from 'react-redux'
 import { dispatchProducts, dispatchCategories, SET_HANDLEINPUTPRODUCTS, INSERT_NEW_PRODUCT, FETCH_CATEGORIES_MERGE_UNITS } from '../redux/actions/'
 import * as ImagePicker from 'expo-image-picker';
-
+import DialogAlertAddProduct from '../components/DialogAlertAddProduct'
 
 
 export class AddProduct extends React.Component {
@@ -24,6 +24,20 @@ export class AddProduct extends React.Component {
             return true
         }
 
+    }
+
+    validName = () =>{
+        let label = "ชื่อสินค้า"
+        if(this.props.errorField.name){
+            if(this.props.duplicateAddName){
+                label = "ชื่อสินค้า (ห้ามซํ้า)"
+            }else{
+                label = "ชื่อสินค้า (ห้ามเว้นว่าง)"
+            }
+        }
+
+
+        return label
     }
 
     _pickImage = async () => {
@@ -53,7 +67,7 @@ export class AddProduct extends React.Component {
 
 
     render() {
-        const { handleInputProducts, categories, units, errorField } = this.props
+        const { handleInputProducts, categories, units, errorField , dialogAlertAddProduct , duplicateAddName } = this.props
         console.log("categories", categories)
         return (
             < ScrollView >
@@ -66,7 +80,7 @@ export class AddProduct extends React.Component {
                             height: 150,
                             resizeMode: 'contain',
                             
-                        }} source={handleInputProducts.imageURI == "" ? require('../assets/qr_code.png') : { uri: handleInputProducts.imageURI }} />
+                        }} source={handleInputProducts.imageURI == "" ? require('../assets/defaultNoImage.jpg') : { uri: handleInputProducts.imageURI }} />
 
                 
                     <IconButton
@@ -86,7 +100,7 @@ export class AddProduct extends React.Component {
                     </View>
 
                     <TextInput
-                        label={errorField.name ? "ชื่อสินค้า (ห้ามเว้นว่าง)" : "ชื่อสินค้า"}
+                        label={this.validName()}
                         style={{ backgroundColor: "transparent" }}
                         error={errorField.name}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "name" }))}
@@ -106,7 +120,7 @@ export class AddProduct extends React.Component {
                     </Picker>
 
                     <TextInput
-                        label="ราคา"
+                        label={errorField.price ? "ราคา (ห้ามเว้นว่าง)" : "ราคา"}
                         keyboardType='numeric'
                         error={errorField.price}
                         style={{ backgroundColor: "transparent" }}
@@ -115,7 +129,7 @@ export class AddProduct extends React.Component {
                     />
 
                     <TextInput
-                        label="ต้นทุน"
+                        label={errorField.cost ? "ต้นทุน (ห้ามว่าง)":"ต้นทุน"}
                         error={errorField.cost}
                         keyboardType='numeric'
                         style={{ backgroundColor: "transparent" }}
@@ -124,7 +138,7 @@ export class AddProduct extends React.Component {
                     />
 
                     <TextInput
-                        label="จำนวนในคลัง"
+                        label={errorField.quantity ? "จำนวนในคลัง (ห้ามว่าง)":"จำนวนในคลัง"}
                         error={errorField.quantity}
                         keyboardType='numeric'
                         style={{ backgroundColor: "transparent" }}
@@ -164,8 +178,11 @@ export class AddProduct extends React.Component {
                     เพิ่มสินค้า
                  </Button>
 
+                 <DialogAlertAddProduct visible={dialogAlertAddProduct} dispatch={this.props.dispatch} detail={"กรุณากรอกข้อมูลให้ครบถ้วน"} />
 
             </ScrollView >
+
+           
 
 
         )
@@ -181,7 +198,11 @@ const mapStateToProps = state => {
         handleInputProducts: state.products.handleInputProducts,
         categories: state.categories.categories,
         units: state.units.units,
-        errorField: state.products.errorField
+        errorField: state.products.errorField,
+        dialogAlertAddProduct: state.products.dialogAlertAddProduct,
+        duplicateAddName: state.products.duplicateAddName,
+        duplicateBarcode: state.products.duplicateBarcode
+
     }
 
 }

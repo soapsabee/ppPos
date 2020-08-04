@@ -28,6 +28,8 @@ const initState = {
     cost: false,
     barcode: false
   },
+  duplicateAddName: false,
+  duplicateBarcode: false,
   startedValid: false,
   hasCameraPermission: null,
   scanned: true,
@@ -37,6 +39,7 @@ const initState = {
   validEmptyProduct: false,
   totalCashier: 0,
   acceptMoney: 0,
+  dialogAlertAddProduct: false
 
 }
 
