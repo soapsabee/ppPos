@@ -15,7 +15,7 @@ export default class DeleteBasketProduct extends React.Component {
                 <Text >
                 เลือก
               </Text>
-                <Text style={{color : "#FF0000",marginLeft:10}}>2</Text>
+               <Text style={{color : "#FF0000",marginLeft:10}}>{ this.props.cashierChecked.length}</Text>
                 <Text style={{marginLeft:10}}>รายการ</Text>
 
               </View>

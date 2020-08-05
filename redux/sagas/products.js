@@ -4,7 +4,7 @@ import {
     SET_CLEAR_BASKET_PRODUCTS, SEARCH_PRODUCT, SET_SEARCH_PRODUCT, SORT_PRODUCT, SET_CATEGORYS,
     ADD_BASKET_CASHIER, SET_UPDATE_CASHIER,
     INCREASE_TOTAL_CASHIER, CLEAR_CASHIER,
-    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, DIALOG_ADDPRODUCT
+    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, DIALOG_ADDPRODUCT, ADD_BASKET_CASHIER_MANUAL, SET_HANDLE_INPUT_CASHIER
 } from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
@@ -49,13 +49,18 @@ function* setHandleInputProducts(actions) {
         let data = yield call(db.productDuplicate, { where: actions.key, value: actions.payload })
         if (data.length > 0) {
             yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "errorField", key: actions.key, value: true } })
-            yield put({ type: SET_PRODUCTS, payload: { key: actions.key =="name" ? "duplicateAddName" : "duplicateBarcode", value: true } });
+            yield put({ type: SET_PRODUCTS, payload: { key: actions.key == "name" ? "duplicateAddName" : "duplicateBarcode", value: true } });
 
-        }else{
-            yield put({ type: SET_PRODUCTS, payload: { key: actions.key =="name" ? "duplicateAddName" : "duplicateBarcode", value: false } });
+        } else {
+            yield put({ type: SET_PRODUCTS, payload: { key: actions.key == "name" ? "duplicateAddName" : "duplicateBarcode", value: false } });
 
         }
     }
+}
+
+function* setHandleInputCashier(actions) {
+    yield put({ type: SET_HANDLEINPUT_PRODUCTS, payload: { headkey: "cashierInputProducts", key: actions.key, value: actions.payload } })
+
 }
 
 function* insertNewProduct(actions) {
@@ -73,13 +78,17 @@ function* insertNewProduct(actions) {
         }
 
     }))
-    
-   if(elementProducts.duplicateAddName || elementProducts.duplicateBarcode ) validInsert = true 
+
+    if (elementProducts.duplicateAddName || elementProducts.duplicateBarcode) validInsert = true
 
 
-    validInsert ? yield put({ type: SET_PRODUCTS, payload: { key: "dialogAlertAddProduct", value: true } }) : console.log("Insert Pass")
-
-
+    if (validInsert) {
+        yield put({ type: SET_PRODUCTS, payload: { key: "dialogAlertAddProduct", value: true } })
+    } else {
+        yield call(db.productsInsert, actions)
+        yield setClearProducts({ key: "handleInputProducts", value: null })
+        yield productFetch()
+    }
     // yield call(db.productsInsert, actions)
     // yield productFetch()
 
@@ -166,6 +175,25 @@ function* setAddBasketCashier(actions) {
 
 }
 
+function* setAddBasketCashierManual(actions) {
+
+    const { barcode, number } = actions.payload
+    if (barcode != "") {
+        let data = yield call(db.productBarcodeSearch, barcode)
+        let i = 0
+        if (data.length > 0) {
+         while(i < parseInt(number)) {
+                yield put({ type: SET_UPDATE_CASHIER, payload: { key: "cashier", value: data } });
+                i++
+            }
+            yield put({ type: INCREASE_TOTAL_CASHIER, payload: { key: "null", value: (data[0].price * number) } })
+        }
+
+        yield setClearProducts({ key: "cashierInputProducts", value: "null" })
+
+    }
+}
+
 
 function* deleteCashier(actions) {
     yield all(actions.payload.map(element =>
@@ -193,6 +221,8 @@ function* actionProducts() {
     yield takeLatest(CLEAR_CASHIER, setClearCashier)
     yield takeLatest(DELETE_CASHIER, deleteCashier)
     yield takeLatest(DIALOG_ADDPRODUCT, setDialog)
+    yield takeLatest(ADD_BASKET_CASHIER_MANUAL, setAddBasketCashierManual)
+    yield takeLatest(SET_HANDLE_INPUT_CASHIER, setHandleInputCashier)
 }
 
 

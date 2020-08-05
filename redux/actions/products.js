@@ -21,6 +21,8 @@ export const CLEAR_CASHIER = "CLEAR_CASHIER"
 export const SET_UPDATE_BASKET_CASHIER = "SET_UPDATE_BASKET_CASHIER"
 export const DELETE_CASHIER = "DELETE_CASHIER"
 export const DIALOG_ADDPRODUCT = "DIALOG_ADDPRODUCT"
+export const ADD_BASKET_CASHIER_MANUAL = "ADD_BASKET_CASHIER_MANUAL"
+export const SET_HANDLE_INPUT_CASHIER = "SET_HANDLE_INPUT_CASHIER"
 
 export const dispatchProducts = (type,obj) => ({
     type: type,payload:obj.value,key:obj.key

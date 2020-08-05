@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Avatar, Checkbox, Divider } from 'react-native-paper';
-import { View, Text } from 'react-native'
+import { View, Text , Image} from 'react-native'
 import { panel } from '../styles/components/'
 import { Value } from 'react-native-reanimated';
 import { dispatchProducts, UPDATE_BASKET_CHECKED , DELETE_BASKET_CHECKED } from '../redux/actions/'
@@ -18,7 +18,7 @@ export default class CardCashier extends React.Component {
 
     }
     render() {
-        const { id, name, price, quantity, unitName } = this.props.value
+        const { id, name, price, quantity, unitName , imageURI } = this.props.value
         return (
             <View >
                 <Card>
@@ -26,7 +26,13 @@ export default class CardCashier extends React.Component {
 
 
                         <View style={{ flexDirection: "row" }}>
-                            <Avatar.Icon size={60} icon="folder" />
+                            <Image style={{
+                                    borderStyle: "solid", borderWidth: 1, borderColor: "#D9D9D9",
+                                    width: 100,
+                                    height: 70,
+                                    resizeMode: 'contain',
+
+                                }}  source={imageURI == "null" ? require('../assets/defaultNoImage.jpg') : { uri: imageURI }} />
                             <View style={{ flexDirection: "column", marginLeft: 10 }}>
                                 <View>
                                     <Text>สินค้า: </Text>

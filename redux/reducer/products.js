@@ -19,6 +19,10 @@ const initState = {
     categoryID: "",
     status: 1
   },
+  cashierInputProducts:{
+    barcode:"",
+    number:0
+  },
   basketChecked: [],
   cashierChecked: [],
   errorField: {
@@ -40,6 +44,7 @@ const initState = {
   totalCashier: 0,
   acceptMoney: 0,
   dialogAlertAddProduct: false
+
 
 }
 

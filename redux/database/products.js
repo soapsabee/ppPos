@@ -3,17 +3,17 @@ const db = SQLite.openDatabase('db.ppPosDb') // returns Database object
 import * as FileSystem from 'expo-file-system';
 
 export const productsFetch = (actions) => {
-    console.log("actions:",actions);
+    console.log("actions:", actions);
     // let sqlSelectAll = "SELECT * FROM products"
 
-    let sqlSelectAll = "SELECT products.id , products.name , products.price , products.quantity, products.cost , products.unitID, products.barcode, products.detail, products.imageURI,  products.status , categories.categoryID , categories.name as categoryName , units.name as unitName FROM products LEFT JOIN categories ON products.categoryID = categories.categoryID  LEFT JOIN units ON  products.unitID = units.unitID "
-   if(actions != "" ){
-        sqlSelectAll += `WHERE products.categoryID = ${actions}`
-        console.log("sql:",sqlSelectAll);
+    let sqlSelectAll = "SELECT products.id , products.name , products.price , products.quantity, products.cost , products.unitID, products.barcode, products.detail, products.imageURI,  products.status , categories.categoryID , categories.name as categoryName , units.name as unitName FROM products LEFT JOIN categories ON products.categoryID = categories.categoryID  LEFT JOIN units ON  products.unitID = units.unitID WHERE products.status = 1 "
+    if (actions != "") {
+        sqlSelectAll += `AND products.categoryID = ${actions}`
+        console.log("sql:", sqlSelectAll);
     }
     return new Promise((resolve, reject) => {
         // 'SELECT products.name, products.price , products.quantity, products.cost , products.unitID, products.barcode, products.detail, products.imageURI, products.categoryID, products.status, categories.categoryID , categories.name , units.unitID , units.name  FROM products INNER JOIN categories ON products.categoryID = categories.categoryID INNER JOIN units ON products.unitID = units.unitID '
-        db.transaction (async (tx) => {
+        db.transaction(async (tx) => {
 
             tx.executeSql(
                 'CREATE TABLE IF NOT EXISTS categories (categoryID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)'
@@ -28,8 +28,8 @@ export const productsFetch = (actions) => {
             )
             tx.executeSql(
                 sqlSelectAll, null,
-                (txObj, { rows: { _array } }) => resolve(_array) 
-    
+                (txObj, { rows: { _array } }) => resolve(_array)
+
                 ,
                 (txObj, error) => console.log('Error ', error)
 
@@ -42,18 +42,19 @@ export const productsFetch = (actions) => {
 
 export const productsInsert = async (actions) => {
     const folder = FileSystem.documentDirectory + 'image'
-    const { name, price, quantity, cost, unit, barcode, detail, imageURI, status , unitID , categoryID } = actions.payload
+    const { name, price, quantity, cost, unit, barcode, detail, imageURI, status, unitID, categoryID } = actions.payload
     const newimageURI = imageURI.substring(imageURI.lastIndexOf("/") + 1)
-
+    const image =  imageURI != "" ?  `${folder}/${newimageURI}` : "null" 
     try {
 
-        await FileSystem.makeDirectoryAsync(folder, {
-            intermediates: true
-        })
-        await FileSystem.copyAsync({ from: imageURI, to: `${folder}/${newimageURI}` })
-
+        if (imageURI != "") {
+            await FileSystem.makeDirectoryAsync(folder, {
+                intermediates: true
+            })
+            await FileSystem.copyAsync({ from: imageURI, to: `${folder}/${newimageURI}` })
+        }
         await db.transaction(tx => {
-            tx.executeSql('INSERT INTO products (name, price, quantity, cost , barcode, detail, imageURI, status , unitID , categoryID ) values (?,?,?,?,?,?,?,?,?,?)', [name, price, quantity, cost, barcode, detail, `${folder}/${newimageURI}`, status , unitID , categoryID],
+            tx.executeSql('INSERT INTO products (name, price, quantity, cost , barcode, detail, imageURI, status , unitID , categoryID ) values (?,?,?,?,?,?,?,?,?,?)', [name, price, quantity, cost, barcode, detail , image, status, unitID, categoryID],
                 (txObj, resultSet) => console.log("resultSet:", resultSet),
                 (txObj, error) => console.log('Error', error))
         })
@@ -64,7 +65,7 @@ export const productsInsert = async (actions) => {
 
 }
 
-export const productDelete = async (actions) =>{
+export const productDelete = async (actions) => {
     return new Promise((resolve, reject) => {
 
 
@@ -85,12 +86,12 @@ export const productDelete = async (actions) =>{
 
 
 export const productSearch = async (actions) => {
-    return new Promise((resolve, reject)=>{
-        
+    return new Promise((resolve, reject) => {
+
         db.transaction(tx => {
 
             tx.executeSql(
-                `SELECT * FROM products WHERE name LIKE '%${actions}%' `,null,
+                `SELECT * FROM products WHERE name LIKE '%${actions}%' `, null,
                 (txObj, { rows: { _array } }) => resolve(_array)
                 ,
                 (txObj, error) => console.log('Error ', error)
@@ -103,12 +104,12 @@ export const productSearch = async (actions) => {
 }
 
 export const productBarcodeSearch = async (actions) => {
-    return new Promise((resolve, reject)=>{
-        
+    return new Promise((resolve, reject) => {
+
         db.transaction(tx => {
 
             tx.executeSql(
-                `SELECT products.id , products.name , products.price , products.quantity, products.cost , products.unitID, products.barcode, products.detail, products.imageURI,  products.status , categories.categoryID , categories.name as categoryName , units.name as unitName FROM products LEFT JOIN categories ON products.categoryID = categories.categoryID  LEFT JOIN units ON  products.unitID = units.unitID WHERE products.barcode = ${actions} `,null,
+                `SELECT products.id , products.name , products.price , products.quantity, products.cost , products.unitID, products.barcode, products.detail, products.imageURI,  products.status , categories.categoryID , categories.name as categoryName , units.name as unitName FROM products LEFT JOIN categories ON products.categoryID = categories.categoryID  LEFT JOIN units ON  products.unitID = units.unitID WHERE products.barcode = ${actions} `, null,
                 (txObj, { rows: { _array } }) => resolve(_array)
                 ,
                 (txObj, error) => console.log('Error ', error)
@@ -121,7 +122,7 @@ export const productBarcodeSearch = async (actions) => {
 }
 
 
-export const productUpdate = async (actions) =>{
+export const productUpdate = async (actions) => {
     return new Promise((resolve, reject) => {
 
 
@@ -140,7 +141,7 @@ export const productUpdate = async (actions) =>{
     })
 }
 
-export const productDuplicate = async (actions) =>{
+export const productDuplicate = async (actions) => {
     return new Promise((resolve, reject) => {
 
 

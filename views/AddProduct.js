@@ -40,6 +40,21 @@ export class AddProduct extends React.Component {
         return label
     }
 
+    
+    validBarcode = () =>{
+        let label = "บาร์โค๊ด"
+        if(this.props.errorField.barcode){
+            if(this.props.duplicateBarcode){
+                label = "บาร์โค๊ด (ห้ามซํ้า)"
+            }else{
+                label = "บาร์โค๊ด (ห้ามเว้นว่าง)"
+            }
+        }
+
+
+        return label
+    }
+
     _pickImage = async () => {
         try {
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -104,7 +119,9 @@ export class AddProduct extends React.Component {
                         style={{ backgroundColor: "transparent" }}
                         error={errorField.name}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "name" }))}
-                    />
+                        value={handleInputProducts.name}
+
+                   />
 
                     <Picker selectedValue={handleInputProducts.unitID} onValueChange={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "unitID" }))}>
                         <Picker.Item label="หน่วยสินค้า" value="หน่วยสินค้า" />
@@ -125,6 +142,7 @@ export class AddProduct extends React.Component {
                         error={errorField.price}
                         style={{ backgroundColor: "transparent" }}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "price" }))}
+                        value={handleInputProducts.price}
 
                     />
 
@@ -134,6 +152,7 @@ export class AddProduct extends React.Component {
                         keyboardType='numeric'
                         style={{ backgroundColor: "transparent" }}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "cost" }))}
+                        value={handleInputProducts.cost}
 
                     />
 
@@ -143,11 +162,12 @@ export class AddProduct extends React.Component {
                         keyboardType='numeric'
                         style={{ backgroundColor: "transparent" }}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "quantity" }))}
+                        value={handleInputProducts.quantity}
 
                     />
                     <View style={{ flexDirection: "row" }}>
                         <TextInput
-                            label="บาร์โค๊ด"
+                            label={this.validBarcode()}
                             error={errorField.barcode}
                             style={{ flex: 1, backgroundColor: "transparent" }}
                             onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "barcode" }))}
@@ -168,6 +188,7 @@ export class AddProduct extends React.Component {
                         underlineColorAndroid='transparent'
                         style={{ height: 100, backgroundColor: "transparent" }}
                         onChangeText={(value) => this.props.dispatch(dispatchProducts(SET_HANDLEINPUTPRODUCTS, { value: value, key: "detail" }))}
+                        value={handleInputProducts.detail}
 
                     />
 

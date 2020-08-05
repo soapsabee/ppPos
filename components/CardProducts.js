@@ -1,19 +1,19 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import { Card, Avatar, Checkbox, Divider } from 'react-native-paper';
 import { panel } from '../styles/components/'
-import { dispatchProducts, UPDATE_BASKET_CHECKED , DELETE_BASKET_CHECKED } from '../redux/actions/'
+import { dispatchProducts, UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED } from '../redux/actions/'
 import { connect } from 'react-redux'
 
 export class CardProducts extends React.Component {
- 
+
 
     onCheckedBTN = (id) => {
         if (this.props.checked == undefined) {
             this.props.dispatch(dispatchProducts(UPDATE_BASKET_CHECKED, { value: id, key: "basketChecked" }))
-        }else{
+        } else {
             this.props.dispatch(dispatchProducts(DELETE_BASKET_CHECKED, { value: id, key: "basketChecked" }))
-            
+
         }
 
 
@@ -21,7 +21,7 @@ export class CardProducts extends React.Component {
 
 
     render() {
-        const { id, name, cost, price, quantity, barcode, imageURI , categoryName, unitName } = this.props.card
+        const { id, name, cost, price, quantity, barcode, imageURI, categoryName, unitName } = this.props.card
         return (
             <View>
 
@@ -33,16 +33,18 @@ export class CardProducts extends React.Component {
 
 
                             <View style={{ flexDirection: "row" }}>
-                                <Avatar.Image size={60} source={{ uri: imageURI }} />
+                                <Image style={{
+                                    borderStyle: "solid", borderWidth: 1, borderColor: "#D9D9D9",
+                                    width: 100,
+                                    height: 70,
+                                    resizeMode: 'contain',
+
+                                }} source={imageURI == "null" ? require('../assets/defaultNoImage.jpg') : { uri: imageURI }} />
                                 <View style={{ flexDirection: "column", marginLeft: 10 }}>
                                     <View>
                                         <Text>บาร์โค๊ด: </Text>
                                         <Text>สินค้า:</Text>
                                         <Text>หมวด:</Text>
-
-
-
-
                                     </View>
                                 </View>
                                 <View style={{ flexDirection: "column", marginLeft: 10 }}>
@@ -56,7 +58,7 @@ export class CardProducts extends React.Component {
                             </View>
 
                             <View style={{ justifyContent: "center" }}>
-                                <Checkbox status={ this.props.checked ? 'checked' : 'unchecked'} onPress={() => this.onCheckedBTN(id)} />
+                                <Checkbox status={this.props.checked ? 'checked' : 'unchecked'} onPress={() => this.onCheckedBTN(id)} />
                             </View>
 
                         </View>
