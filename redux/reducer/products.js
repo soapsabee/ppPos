@@ -1,7 +1,8 @@
 import {
   SET_PRODUCTS, SET_HANDLEINPUT_PRODUCTS, SET_UPDATE_BASKET_CHECKED,
   SET_DELETE_BASKET_CHECKED, SET_CLEAR_BASKET_PRODUCTS, SET_UPDATE_CASHIER,
-  INCREASE_TOTAL_CASHIER, SET_UPDATE_BASKET_CASHIER, SET_DELETE_BASKET_CASHIER
+  INCREASE_TOTAL_CASHIER, SET_UPDATE_BASKET_CASHIER, SET_DELETE_BASKET_CASHIER,INCREASE_ACCEPT_MONEY,
+  BACKSPACE_ACCEPT_MONEY,DECREASE_ACCEPT_MONEY
 } from '../actions'
 
 const initState = {
@@ -42,8 +43,11 @@ const initState = {
   cashier: [],
   validEmptyProduct: false,
   totalCashier: 0,
-  acceptMoney: 0,
-  dialogAlertAddProduct: false
+  totalCost:0,
+  acceptMoney: "",
+  changeMoney: 0,
+  billNumber:"",
+  dialogAlertAddProduct: false,
 
 
 }
@@ -99,6 +103,16 @@ const products = (state = initState, action) => {
     case INCREASE_TOTAL_CASHIER:
       return {
         ...state, totalCashier: state.totalCashier += action.payload.value
+      }
+    
+    case INCREASE_ACCEPT_MONEY:
+      return {
+        ...state, acceptMoney : state.acceptMoney + action.payload.value
+      }
+    
+    case DECREASE_ACCEPT_MONEY:
+      return {
+        ...state, acceptMoney : state.acceptMoney.slice(0, -1)
       }
 
     default:

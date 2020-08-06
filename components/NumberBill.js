@@ -9,7 +9,7 @@ export default class NumberBill extends React.Component {
         return (
             <View>
                 <Text style={numberbill.textStyle}>
-                    เลขที่บิล xxxx-xxxx-xxxx
+                    เลขที่บิล {this.props.numberBill}
             </Text>
             </View>
 

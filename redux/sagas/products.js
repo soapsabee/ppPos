@@ -4,7 +4,8 @@ import {
     SET_CLEAR_BASKET_PRODUCTS, SEARCH_PRODUCT, SET_SEARCH_PRODUCT, SORT_PRODUCT, SET_CATEGORYS,
     ADD_BASKET_CASHIER, SET_UPDATE_CASHIER,
     INCREASE_TOTAL_CASHIER, CLEAR_CASHIER,
-    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, DIALOG_ADDPRODUCT, ADD_BASKET_CASHIER_MANUAL, SET_HANDLE_INPUT_CASHIER
+    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, DIALOG_ADDPRODUCT, ADD_BASKET_CASHIER_MANUAL, SET_HANDLE_INPUT_CASHIER,
+    INCREASE_ACCEPT_MONEY, ADD_ACCEPT_MONEY, BACKSPACE_ACCEPT_MONEY, DECREASE_ACCEPT_MONEY , CONFIRM_CASHIER
 } from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
@@ -182,7 +183,7 @@ function* setAddBasketCashierManual(actions) {
         let data = yield call(db.productBarcodeSearch, barcode)
         let i = 0
         if (data.length > 0) {
-         while(i < parseInt(number)) {
+            while (i < parseInt(number)) {
                 yield put({ type: SET_UPDATE_CASHIER, payload: { key: "cashier", value: data } });
                 i++
             }
@@ -205,6 +206,49 @@ function* deleteCashier(actions) {
 }
 
 
+function* addAcceptMoney(actions) {
+    const elementProducts = yield select(getProducts)
+    if ((elementProducts.acceptMoney != "" || (actions.payload != "0" && elementProducts.acceptMoney == ""))) {
+
+
+        if(elementProducts.acceptMoney.indexOf(".") == -1 && actions.payload == "."){
+            yield put({ type: INCREASE_ACCEPT_MONEY, payload: { key: "null", value: "0"} })
+
+        }
+
+        if (actions.payload != "." || (elementProducts.acceptMoney.indexOf(".") == -1 && actions.payload == ".")) {
+            
+            yield put({ type: INCREASE_ACCEPT_MONEY, payload: { key: "null", value: actions.payload } })
+
+        }
+
+    }
+}
+
+function* backspaceAcceptMoney(actions) {
+    const elementProducts = yield select(getProducts)
+
+    yield put({ type: DECREASE_ACCEPT_MONEY, payload: { key: "null", value: actions.payload } })
+    if(elementProducts.acceptMoney == "0."){
+        yield setClearProducts({key: "acceptMoney" ,value:"null"}) 
+    }
+}
+
+function* confirmCalculator(actions) {
+    const { acceptMoney , totalCashier } = actions.payload
+    let result = 0
+    let now = new Date();
+    let sqliteDate = now.toISOString();
+
+    result = parseFloat(acceptMoney) - parseFloat(totalCashier)
+
+
+      yield setDialog({key: "billNumber" , payload: sqliteDate})
+      yield setDialog({key: "changeMoney" , payload: result})
+      
+}
+
+
 function* actionProducts() {
 
     yield takeLatest(FETCH_PRODUCT, productFetch)
@@ -223,6 +267,9 @@ function* actionProducts() {
     yield takeLatest(DIALOG_ADDPRODUCT, setDialog)
     yield takeLatest(ADD_BASKET_CASHIER_MANUAL, setAddBasketCashierManual)
     yield takeLatest(SET_HANDLE_INPUT_CASHIER, setHandleInputCashier)
+    yield takeLatest(ADD_ACCEPT_MONEY, addAcceptMoney)
+    yield takeLatest(BACKSPACE_ACCEPT_MONEY, backspaceAcceptMoney)
+    yield takeLatest(CONFIRM_CASHIER , confirmCalculator )
 }
 
 
