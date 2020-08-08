@@ -1,8 +1,15 @@
 import { SET_RECIEPT  } from '../actions/reciept'
+import moment from 'moment';
 
 const initState = {
 
-    reciept:[]
+    reciept:[],
+    datePickerShow: false,
+    date: new Date(),
+    totalBalance:0,
+    totalProfit:0,
+    totalBalanceNow:0,
+    totalProfitNow:0
 
 }
 

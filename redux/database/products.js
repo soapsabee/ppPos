@@ -43,11 +43,13 @@ export const productsFetch = (actions) => {
 export const productsInsert = async (actions) => {
     const folder = FileSystem.documentDirectory + 'image'
     const { name, price, quantity, cost, unit, barcode, detail, imageURI, status, unitID, categoryID } = actions.payload
-    const newimageURI = imageURI.substring(imageURI.lastIndexOf("/") + 1)
-    const image =  imageURI != "" ?  `${folder}/${newimageURI}` : "null" 
+    console.log("IMAGEURI:",imageURI);
+
+    const newimageURI =  imageURI != undefined && imageURI.substring(imageURI.lastIndexOf("/") + 1) 
+    const image =  imageURI != "" && imageURI != undefined ?  `${folder}/${newimageURI}` : "null" 
     try {
 
-        if (imageURI != "") {
+        if (imageURI != "" && imageURI != undefined  ) {
             await FileSystem.makeDirectoryAsync(folder, {
                 intermediates: true
             })

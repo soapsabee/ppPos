@@ -1,10 +1,20 @@
 import React from 'react'
 import { View, Text, StyleSheet, Alert } from 'react-native'
 import { Title, List ,Divider } from 'react-native-paper'
-export default class Report extends React.Component {
+import { connect } from 'react-redux'
+import { dispatchReciept ,RECIEPT_SALE_TODAY} from "../redux/actions"
 
+export  class Report extends React.Component {
+
+
+  
+  componentDidMount = () => {
+ 
+    this.props.dispatch(dispatchReciept(RECIEPT_SALE_TODAY, { value: "null", key: "null" }))
+  }
 
   render() {
+    const { totalBalanceNow, totalProfitNow} = this.props
 
     return (
       <View style={{ flexDirection: "column" }}>
@@ -16,11 +26,11 @@ export default class Report extends React.Component {
           </View>
           <View style={{ alignItems: "flex-end" }}>
             <Title style={{ color: "#fff" }}>
-              2,450.00
+              {totalBalanceNow}
 
             </Title>
             <Text style={{ color: "#fff" }}>
-              กำไร: 392.00
+              กำไร: {totalProfitNow}
             </Text>
           </View>
 
@@ -35,13 +45,13 @@ export default class Report extends React.Component {
             <Divider />
 
 
-        <List.Item
+        {/* <List.Item
           title="สรุปยอดขายรายเดือน"
           description="ระบุจาก เดือน/ปี"
           left={props => <List.Icon {...props} icon="folder" />}
           onPress={() => this.props.navigation.navigate('MonthlyReports')}
         />
-            <Divider />
+            <Divider /> */}
 
       </View>
 
@@ -49,3 +59,14 @@ export default class Report extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+
+  // return state
+  return {
+    totalBalanceNow: state.reciept.totalBalanceNow,
+    totalProfitNow: state.reciept.totalProfitNow
+  }
+
+}
+
+export default connect(mapStateToProps)(Report)

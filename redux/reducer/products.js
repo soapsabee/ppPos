@@ -102,7 +102,7 @@ const products = (state = initState, action) => {
       }
     case INCREASE_TOTAL_CASHIER:
       return {
-        ...state, totalCashier: state.totalCashier += action.payload.value
+        ...state, [action.payload.key]: state[action.payload.key] += action.payload.value
       }
     
     case INCREASE_ACCEPT_MONEY:

@@ -5,13 +5,12 @@ import {
     ADD_BASKET_CASHIER, SET_UPDATE_CASHIER,
     INCREASE_TOTAL_CASHIER, CLEAR_CASHIER,
     DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, DIALOG_ADDPRODUCT, ADD_BASKET_CASHIER_MANUAL, SET_HANDLE_INPUT_CASHIER,
-    INCREASE_ACCEPT_MONEY, ADD_ACCEPT_MONEY, BACKSPACE_ACCEPT_MONEY, DECREASE_ACCEPT_MONEY , CONFIRM_CASHIER
+    INCREASE_ACCEPT_MONEY, ADD_ACCEPT_MONEY, BACKSPACE_ACCEPT_MONEY, DECREASE_ACCEPT_MONEY , CONFIRM_CASHIER 
 } from "../actions"
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
 import { getProducts } from './selector'
-import { categoriesFetch } from "../database";
-import rootSaga from ".";
+import moment from 'moment';
 
 function* productFetch(actions) {
 
@@ -65,7 +64,7 @@ function* setHandleInputCashier(actions) {
 }
 
 function* insertNewProduct(actions) {
-
+console.log("insertNewProduct");
     const elementProducts = yield select(getProducts)
     let validInsert = false
     yield all(Object.keys(elementProducts.handleInputProducts).map(element => {
@@ -169,7 +168,9 @@ function* setAddBasketCashier(actions) {
         let data = yield call(db.productBarcodeSearch, actions.payload.barcode)
         if (data.length > 0) {
             yield put({ type: SET_UPDATE_CASHIER, payload: { key: "cashier", value: data } });
-            yield put({ type: INCREASE_TOTAL_CASHIER, payload: { key: "null", value: data[0].price } })
+            yield put({ type: INCREASE_TOTAL_CASHIER, payload: { key: "totalCashier", value: data[0].price } })
+            yield put({ type: INCREASE_TOTAL_CASHIER, payload: { key: "totalCost", value: data[0].cost } })
+
         }
 
     }
@@ -237,16 +238,18 @@ function* backspaceAcceptMoney(actions) {
 function* confirmCalculator(actions) {
     const { acceptMoney , totalCashier } = actions.payload
     let result = 0
-    let now = new Date();
-    let sqliteDate = now.toISOString();
+    let date = moment()
+    .utcOffset('+07:00')
+    .format('YYYY-MM-DD-HH:mm:ss');
 
     result = parseFloat(acceptMoney) - parseFloat(totalCashier)
 
 
-      yield setDialog({key: "billNumber" , payload: sqliteDate})
+      yield setDialog({key: "billNumber" , payload: date})
       yield setDialog({key: "changeMoney" , payload: result})
       
 }
+
 
 
 function* actionProducts() {
