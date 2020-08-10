@@ -70,3 +70,21 @@ export const categorySearch = async (actions) => {
 
     })
 }
+
+export const deleteCategoriesTable = () => {
+    return new Promise((resolve, reject) => {
+
+        db.transaction(tx => {
+
+            tx.executeSql(
+                `DROP TABLE categories`, null,
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}

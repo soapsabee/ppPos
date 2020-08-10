@@ -95,3 +95,20 @@ export const recieptSUM = (actions) => {
     })
 }
 
+export const deleteRecieptsTable = () => {
+    return new Promise((resolve, reject) => {
+
+        db.transaction(tx => {
+
+            tx.executeSql(
+                `DROP TABLE reciept`, null,
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}

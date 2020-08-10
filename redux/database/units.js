@@ -77,3 +77,21 @@ export const unitDelete = async (actions) => {
 
     })
 }
+
+export const deleteUnitsTable = () => {
+    return new Promise((resolve, reject) => {
+
+        db.transaction(tx => {
+
+            tx.executeSql(
+                `DROP TABLE units`, null,
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}

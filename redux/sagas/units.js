@@ -83,7 +83,6 @@ function* setUnit(actions) {
 }
 
 
-
 function* actionUnits() {
 
     yield takeLatest(FETCH_UNITS, unitsFetch)
