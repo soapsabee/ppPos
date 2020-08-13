@@ -5,12 +5,14 @@ import {
     ADD_BASKET_CASHIER, SET_UPDATE_CASHIER,
     INCREASE_TOTAL_CASHIER, CLEAR_CASHIER,
     DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, DIALOG_ADDPRODUCT, ADD_BASKET_CASHIER_MANUAL, SET_HANDLE_INPUT_CASHIER,
-    INCREASE_ACCEPT_MONEY, ADD_ACCEPT_MONEY, BACKSPACE_ACCEPT_MONEY, DECREASE_ACCEPT_MONEY , CONFIRM_CASHIER 
+    INCREASE_ACCEPT_MONEY, ADD_ACCEPT_MONEY, BACKSPACE_ACCEPT_MONEY, DECREASE_ACCEPT_MONEY , CONFIRM_CASHIER , IMPORT_PRODUCT_CSV , EXPORT_PRODUCT_CSV
 } from "../actions"
-import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
+import { put, takeLatest, call, delay, select, all, take } from 'redux-saga/effects';
 import * as db from '../database'
 import { getProducts } from './selector'
 import moment from 'moment';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 function* productFetch(actions) {
 
@@ -64,7 +66,6 @@ function* setHandleInputCashier(actions) {
 }
 
 function* insertNewProduct(actions) {
-console.log("insertNewProduct");
     const elementProducts = yield select(getProducts)
     let validInsert = false
     yield all(Object.keys(elementProducts.handleInputProducts).map(element => {
@@ -250,6 +251,104 @@ function* confirmCalculator(actions) {
       
 }
 
+function* importProductCSV(actions) {
+    const uri = actions.payload
+    const read = yield FileSystem.readAsStringAsync(uri)
+    const productCSV = yield processDataImport(read)
+  
+    yield all(productCSV.map(value => 
+        call(db.productsInsert, { payload: value.product })
+
+    ))
+
+  
+}
+
+function* processDataImport(allText) {
+    let allTextLines = allText.split(/\r\n|\n/);
+    let headers = allTextLines[0].replace(/\s/g,'').split(',');
+    let lines = [];
+
+    for (let i=1; i<allTextLines.length; i++) {
+        let data = allTextLines[i].split(',');
+        if (data.length == headers.length) {
+
+            let tarr = {};
+            for (let j=0; j<headers.length; j++) {
+
+                tarr = { ...tarr, product:{ ...tarr.product, [headers[j]]: data[j] } } 
+                
+            }
+            
+            lines.push(tarr);
+        }
+    }
+    return lines
+    
+}
+
+
+function* exportFile(actions) {
+    let data = yield call(db.productsFetch, "export")
+    if (data.length > 0) {
+        let fileName = "Products" + String(moment(new Date()).add(0, 'days').format('YYYY-MM-DD'));
+
+        let fileUri = FileSystem.documentDirectory + fileName + ".csv";
+
+        let txtFile = yield convertToCSV(data);
+
+        yield FileSystem.writeAsStringAsync(fileUri, txtFile, { encoding: FileSystem.EncodingType.UTF8 });
+
+        yield Sharing.shareAsync(fileUri)
+
+        yield FileSystem.deleteAsync(fileUri)
+    }
+
+}
+
+
+
+function* convertToCSV(objArray) {
+
+    let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+
+    let str = '';
+
+    let headerLine = 'id, name, price, quantity, cost, barcode, detail, imageURI, status, unitID, categoryID';
+
+    str += headerLine + '\r\n';
+
+
+
+    for (let i = 0; i < array.length; i++) {
+
+        let line = '';
+
+        for (let index in array[i]) {
+
+      
+            if (line != '') line += ','
+
+
+
+            line += array[i][index];
+
+        }
+
+
+
+        str += line + '\r\n';
+
+    }
+
+
+
+    return str;
+
+
+}
+
+
 
 
 function* actionProducts() {
@@ -273,6 +372,8 @@ function* actionProducts() {
     yield takeLatest(ADD_ACCEPT_MONEY, addAcceptMoney)
     yield takeLatest(BACKSPACE_ACCEPT_MONEY, backspaceAcceptMoney)
     yield takeLatest(CONFIRM_CASHIER , confirmCalculator )
+    yield takeLatest(IMPORT_PRODUCT_CSV , importProductCSV)
+    yield takeLatest(EXPORT_PRODUCT_CSV , exportFile)
 }
 
 

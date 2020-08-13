@@ -28,6 +28,8 @@ export const ADD_ACCEPT_MONEY = "ADD_ACCEPT_MONEY"
 export const DECREASE_ACCEPT_MONEY = "DECREASE_ACCEPT_MONEY"
 export const BACKSPACE_ACCEPT_MONEY = "BACKSPACE_ACCEPT_MONEY"
 export const CONFIRM_CASHIER = "CONFIRM_CASHIER"
+export const IMPORT_PRODUCT_CSV = "IMPORT_PRODUCT_CSV"
+export const EXPORT_PRODUCT_CSV = "EXPORT_PRODUCT_CSV"
 
 export const dispatchProducts = (type,obj) => ({
     type: type,payload:obj.value,key:obj.key

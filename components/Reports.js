@@ -26,7 +26,6 @@ export class Reports extends React.Component {
   }
 
   onChange = (selectedDate) => {
-    console.log("selectedDate",selectedDate);
     const currentDate = selectedDate.type != "dismissed" ? new Date(selectedDate.nativeEvent.timestamp) : this.props.date
     currentDate.setTime(currentDate.getTime() + currentDate.getTimezoneOffset() * 60 * 1000)
     // this.setShow(false)

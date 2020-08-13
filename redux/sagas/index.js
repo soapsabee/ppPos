@@ -12,6 +12,6 @@ export default function* rootSaga() {
     units(),
     cashier(),
     reciept()
-  ]
+ ]
   );
 }
