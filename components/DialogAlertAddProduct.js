@@ -1,12 +1,12 @@
 import React from 'react'
 import { Button, Dialog, Portal, Paragraph } from 'react-native-paper';
-import { dispatchProducts, DIALOG_ADDPRODUCT } from '../redux/actions/'
+import { dispatchProducts, SET_KEY } from '../redux/actions/'
 
 export default class DialogAlertAddProduct extends React.Component {
 
 
     hideDialog = () => {
-        this.props.dispatch(dispatchProducts(DIALOG_ADDPRODUCT, { value: false, key: "dialogAlertAddProduct" }))
+        this.props.dispatch(dispatchProducts(SET_KEY, { value: false, key: "dialogAlertAddProduct" }))
     }
 
     render() {

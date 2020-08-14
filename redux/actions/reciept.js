@@ -6,7 +6,6 @@ export const SET_RECIEPT_BYKEY = "SET_RECIEPT_BYKEY"
 export const SORT_RECIEPT = "SORT_RECIEPT"
 export const RECIEPT_SALE_TODAY = "RECIEPT_SALE_TODAY"
 export const EXPORT_REPORT = "EXPORT_REPORT"
-export const TABLE_CLEAR = "TABLE_CLEAR"
 
 export const dispatchReciept = (type,obj) => ({
     type: type,payload:obj.value,key:obj.key

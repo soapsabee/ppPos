@@ -48,7 +48,9 @@ const initState = {
   changeMoney: 0,
   billNumber:"",
   dialogAlertAddProduct: false,
-
+  diaglogEditPromptPay: false,
+  handleInputPromptPay:"",
+  promptpayNumber:"null"
 
 }
 

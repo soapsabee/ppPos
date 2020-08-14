@@ -4,7 +4,7 @@ import { Title, List, Divider } from 'react-native-paper'
 import * as DocumentPicker from 'expo-document-picker';
 import { connect } from 'react-redux'
 import { dispatchProducts } from '../redux/actions/'
-import { IMPORT_PRODUCT_CSV, EXPORT_PRODUCT_CSV } from '../redux/actions'
+import { IMPORT_PRODUCT_CSV, EXPORT_PRODUCT_CSV ,TABLE_CLEAR} from '../redux/actions'
 
 export class Backup extends React.Component {
 
@@ -22,6 +22,11 @@ export class Backup extends React.Component {
     if(file.type == "success"){
       this.props.dispatch(dispatchProducts(IMPORT_PRODUCT_CSV, { value: file.uri , key: "null" }))
     }
+
+  }
+
+  clearTable = async () => {
+    this.props.dispatch(dispatchProducts(TABLE_CLEAR, { value: "null" , key: "null" }))
 
   }
 
@@ -48,6 +53,7 @@ export class Backup extends React.Component {
           title="ล้างข้อมูลทั้งหมด"
           description="จะทำการล้างข้อมูลทั้งหมดที่อยู่ในเครื่องนี้"
           left={props => <List.Icon {...props} icon="delete" />}
+          onPress={() => this.clearTable()}
         />
         <Divider />
 

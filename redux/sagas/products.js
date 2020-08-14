@@ -4,8 +4,9 @@ import {
     SET_CLEAR_BASKET_PRODUCTS, SEARCH_PRODUCT, SET_SEARCH_PRODUCT, SORT_PRODUCT, SET_CATEGORYS,
     ADD_BASKET_CASHIER, SET_UPDATE_CASHIER,
     INCREASE_TOTAL_CASHIER, CLEAR_CASHIER,
-    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, DIALOG_ADDPRODUCT, ADD_BASKET_CASHIER_MANUAL, SET_HANDLE_INPUT_CASHIER,
-    INCREASE_ACCEPT_MONEY, ADD_ACCEPT_MONEY, BACKSPACE_ACCEPT_MONEY, DECREASE_ACCEPT_MONEY , CONFIRM_CASHIER , IMPORT_PRODUCT_CSV , EXPORT_PRODUCT_CSV
+    DELETE_CASHIER, SET_DELETE_BASKET_CASHIER, ADD_BASKET_CASHIER_MANUAL, SET_HANDLE_INPUT_CASHIER,
+    INCREASE_ACCEPT_MONEY, ADD_ACCEPT_MONEY, BACKSPACE_ACCEPT_MONEY, DECREASE_ACCEPT_MONEY , CONFIRM_CASHIER , IMPORT_PRODUCT_CSV , EXPORT_PRODUCT_CSV,
+    TABLE_CLEAR,EDIT_PROMPTPAY,FETCH_PROMPTPAY,SET_KEY
 } from "../actions"
 import { put, takeLatest, call, delay, select, all, take } from 'redux-saga/effects';
 import * as db from '../database'
@@ -156,7 +157,7 @@ function* setProduct(actions) {
 
 }
 
-function* setDialog(actions) {
+function* setByKey(actions) {
     yield put({ type: SET_PRODUCTS, payload: { key: actions.key, value: actions.payload } });
 
 }
@@ -246,8 +247,8 @@ function* confirmCalculator(actions) {
     result = parseFloat(acceptMoney) - parseFloat(totalCashier)
 
 
-      yield setDialog({key: "billNumber" , payload: date})
-      yield setDialog({key: "changeMoney" , payload: result})
+      yield setByKey({key: "billNumber" , payload: date})
+      yield setByKey({key: "changeMoney" , payload: result})
       
 }
 
@@ -349,6 +350,27 @@ function* convertToCSV(objArray) {
 }
 
 
+function* clearAllTable() {
+
+    yield call(db.deleteProductsTable)
+    yield call(db.deleteRecieptsTable)
+    yield call(db.deleteCategoriesTable)
+    yield call(db.deleteUnitsTable)
+
+}
+
+function* promptPayFetch(actions){
+    console.log("promptPayFetch");
+  let data = yield call(db.promptPayFetch)
+  console.log("data:",data);
+  yield setByKey({key: "promptpayNumber" , payload: data})
+}
+
+function* editPromptPay(actions) {
+    yield call(db.promptPayUpdate, actions.payload)
+}
+
+
 
 
 function* actionProducts() {
@@ -366,7 +388,7 @@ function* actionProducts() {
     yield takeLatest(ADD_BASKET_CASHIER, setAddBasketCashier)
     yield takeLatest(CLEAR_CASHIER, setClearCashier)
     yield takeLatest(DELETE_CASHIER, deleteCashier)
-    yield takeLatest(DIALOG_ADDPRODUCT, setDialog)
+    yield takeLatest(SET_KEY, setByKey)
     yield takeLatest(ADD_BASKET_CASHIER_MANUAL, setAddBasketCashierManual)
     yield takeLatest(SET_HANDLE_INPUT_CASHIER, setHandleInputCashier)
     yield takeLatest(ADD_ACCEPT_MONEY, addAcceptMoney)
@@ -374,6 +396,9 @@ function* actionProducts() {
     yield takeLatest(CONFIRM_CASHIER , confirmCalculator )
     yield takeLatest(IMPORT_PRODUCT_CSV , importProductCSV)
     yield takeLatest(EXPORT_PRODUCT_CSV , exportFile)
+    yield takeLatest(TABLE_CLEAR, clearAllTable)
+    yield takeLatest(EDIT_PROMPTPAY , editPromptPay )
+    yield takeLatest(FETCH_PROMPTPAY, promptPayFetch)
 }
 
 

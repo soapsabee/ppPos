@@ -101,7 +101,7 @@ export const deleteRecieptsTable = () => {
         db.transaction(tx => {
 
             tx.executeSql(
-                `DROP TABLE reciept`, null,
+                `DROP TABLE IF EXISTS reciept`, null,
                 (txObj, { rows: { _array } }) => resolve(_array)
                 ,
                 (txObj, error) => console.log('Error ', error)

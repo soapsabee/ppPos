@@ -77,7 +77,7 @@ export const deleteCategoriesTable = () => {
         db.transaction(tx => {
 
             tx.executeSql(
-                `DROP TABLE categories`, null,
+                `DROP TABLE IF EXISTS categories`, null,
                 (txObj, { rows: { _array } }) => resolve(_array)
                 ,
                 (txObj, error) => console.log('Error ', error)

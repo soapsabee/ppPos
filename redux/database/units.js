@@ -84,7 +84,7 @@ export const deleteUnitsTable = () => {
         db.transaction(tx => {
 
             tx.executeSql(
-                `DROP TABLE units`, null,
+                `DROP TABLE IF EXISTS units`, null,
                 (txObj, { rows: { _array } }) => resolve(_array)
                 ,
                 (txObj, error) => console.log('Error ', error)

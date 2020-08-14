@@ -1,6 +1,6 @@
 import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
 import * as db from '../database'
-import { FETCH_RECIEPT, SET_RECIEPT, INSERT_RECIEPT, SET_RECIEPT_BYKEY, SORT_RECIEPT, RECIEPT_SALE_TODAY, EXPORT_REPORT , TABLE_CLEAR } from "../actions"
+import { FETCH_RECIEPT, SET_RECIEPT, INSERT_RECIEPT, SET_RECIEPT_BYKEY, SORT_RECIEPT, RECIEPT_SALE_TODAY, EXPORT_REPORT  } from "../actions"
 import { getReciept } from './selector'
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
@@ -117,14 +117,6 @@ function* convertToCSV(objArray) {
 
 }
 
-function* clearAllTable() {
-
-    yield call(db.deleteProductsTable)
-    yield call(db.deleteRecieptsTable)
-    yield call(db.deleteCategoriesTable)
-    yield call(db.deleteUnitsTable)
-
-}
 
 
 
@@ -138,7 +130,6 @@ function* actionReciept() {
     yield takeLatest(SORT_RECIEPT, sortReciept)
     yield takeLatest(RECIEPT_SALE_TODAY, recieptSaleToday)
     yield takeLatest(EXPORT_REPORT, exportFile)
-    yield takeLatest(TABLE_CLEAR, clearAllTable)
 }
 
 export default actionReciept
