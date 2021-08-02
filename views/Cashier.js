@@ -39,7 +39,7 @@ export class Cashier extends React.Component {
           </View>
           <ScrollView >
 
-            {this.props.cashier && this.props.cashier.map((value, key) => <CardCashier keys={key} value={value} checked={this.props.cashierChecked.find(element => element.id == key)} dispatch={this.props.dispatch} />)}
+            {this.props.cashier && this.props.cashier.map((value, id) => <CardCashier key={id} value={value} checked={this.props.cashierChecked.find(element => element.id == key)} dispatch={this.props.dispatch} />)}
 
           </ScrollView >
 

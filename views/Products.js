@@ -1,5 +1,7 @@
 import React from 'react'
-import { View, Text, Picker, ScrollView, Alert } from 'react-native'
+import { View, Text, ScrollView, Alert } from 'react-native'
+import { Picker } from '@react-native-picker/picker'
+
 import { Searchbar } from 'react-native-paper';
 import ToolsProducts from '../components/ToolsProducts'
 import ToolAddProducts from '../components/ToolAddProducts'

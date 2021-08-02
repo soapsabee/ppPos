@@ -20,6 +20,7 @@ export class Reports extends React.Component {
 
   }
 
+ 
   _exportCSV = (reciept) => {
     this.props.dispatch(dispatchReciept(EXPORT_REPORT, { value: reciept, key: "null" }))
 
@@ -28,13 +29,15 @@ export class Reports extends React.Component {
   onChange = (selectedDate) => {
     const currentDate = selectedDate.type != "dismissed" ? new Date(selectedDate.nativeEvent.timestamp) : this.props.date
     currentDate.setTime(currentDate.getTime() + currentDate.getTimezoneOffset() * 60 * 1000)
-    // this.setShow(false)
+    this.setShow(false)
     this.props.dispatch(dispatchReciept(SORT_RECIEPT, { value: currentDate, key: "date" }))
   }
 
   render() {
 
     const { reciept, datePickerShow, date, totalBalance, totalProfit } = this.props
+
+  
 
     return (
       <View style={{ flex: 1, flexDirection: "column" }}>
@@ -66,7 +69,7 @@ export class Reports extends React.Component {
         </View>
 
         <ScrollView >
-          {reciept && reciept.map((value) => <CardReports report={value} />)}
+          {reciept && reciept.map((value,id) => <CardReports key={id} report={value} />)}
         </ScrollView>
 
         {datePickerShow && (
@@ -74,8 +77,11 @@ export class Reports extends React.Component {
             value={date}
             mode={'date'}
             display="default"
-            onChange={(value) => this.onChange(value)}
-            onDismiss={this.setShow(false)}
+            onChange={(value) => { 
+             this.onChange(value)
+            }
+ 
+          }
           />
         )}
 

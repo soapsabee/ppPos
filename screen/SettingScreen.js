@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 import { useFonts, Prompt_300Light } from '@expo-google-fonts/prompt';
 import { createStackNavigator , TransitionPresets } from '@react-navigation/stack';
 import Setting from '../views/Setting'

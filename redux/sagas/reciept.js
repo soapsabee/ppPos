@@ -7,13 +7,12 @@ import * as FileSystem from 'expo-file-system';
 import moment from 'moment';
 
 function* recieptFetch(actions) {
-    let sumReciept = yield call(db.recieptSUM)
-    console.log(sumReciept);
     const elementReciept = yield select(getReciept)
     let year = elementReciept.date.getFullYear()
     let month = `${elementReciept.date.getMonth() + 1}`.padStart(2, "0")
     let day = `${elementReciept.date.getDate()}`.padStart(2, "0")
     let date = `${year}-${month}-${day}`
+    let sumReciept = yield call(db.recieptSUM,date)
 
     let data = yield call(db.recieptFetch, date)
 

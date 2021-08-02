@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Text, Image, Picker, ScrollView } from 'react-native'
+import { View, Text, Image, ScrollView } from 'react-native'
+import { Picker } from '@react-native-picker/picker'
 import { IconButton, TextInput, Switch, Button } from 'react-native-paper';
 import { connect } from 'react-redux'
 import { dispatchProducts, dispatchCategories, SET_HANDLEINPUTPRODUCTS, INSERT_NEW_PRODUCT, FETCH_CATEGORIES_MERGE_UNITS } from '../redux/actions/'
@@ -83,7 +84,6 @@ export class AddProduct extends React.Component {
 
     render() {
         const { handleInputProducts, categories, units, errorField , dialogAlertAddProduct , duplicateAddName } = this.props
-        console.log("categories", categories)
         return (
             < ScrollView >
                 <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center" }}>

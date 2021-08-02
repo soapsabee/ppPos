@@ -36,7 +36,7 @@ export const recieptInsert = (actions) => {
     db.transaction(async (tx) => {
 
         tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS reciept (date TEXT PRIMARY KEY , balance FLOAT , totalcost FLOAT)'
+            'CREATE TABLE IF NOT EXISTS reciept (date TEXT , balance FLOAT , totalcost FLOAT)'
         )
 
         tx.executeSql(

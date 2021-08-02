@@ -27,7 +27,6 @@ export default class CardCashier extends React.Component {
 
                         <View style={{ flexDirection: "row" }}>
                             <Image style={{
-                                    borderStyle: "solid", borderWidth: 1, borderColor: "#D9D9D9",
                                     width: 100,
                                     height: 70,
                                     resizeMode: 'contain',

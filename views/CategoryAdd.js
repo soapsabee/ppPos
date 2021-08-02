@@ -20,7 +20,6 @@ export  class CategoryAdd extends React.Component {
   }
 
   render() {
-    console.log("props:",this.props.route.name)
     const { basketChecked ,category , basketCheckedLength } = this.props
     return (
 
@@ -50,7 +49,7 @@ export  class CategoryAdd extends React.Component {
 
 
         < ScrollView >
-          { category && category.map((value)=> <ListCategoryCheckbox item={value}  checked={basketChecked.find(element => element.categoryID == value.categoryID)} /> )}
+          { category && category.map((value,id)=> <ListCategoryCheckbox item={value} key={id} checked={basketChecked.find(element => element.categoryID == value.categoryID)} /> )}
           
         </ScrollView >
         <View style={{alignItems:"flex-end"}}>

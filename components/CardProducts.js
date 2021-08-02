@@ -25,7 +25,7 @@ export class CardProducts extends React.Component {
         return (
             <View>
 
-                <Card onPress={() => Alert.alert("Hello")}>
+                <Card >
                     <Card.Content style={{ flexDirection: "column" }}>
 
                         <View style={panel.content_row_between}>
