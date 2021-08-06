@@ -31,8 +31,7 @@ export class Products extends React.Component {
 
   render() {
     const { products, basketCheckedLength, basketChecked , sortProducts , categories } = this.props
-    console.log("count:", basketCheckedLength
-    );
+
     // console.log("products:",products.products)
     // products.products.map((value)=>{
 

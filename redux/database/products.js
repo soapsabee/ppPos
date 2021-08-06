@@ -52,7 +52,15 @@ export const productsInsert = async (actions) => {
             })
             await FileSystem.copyAsync({ from: imageURI, to: `${folder}/${newimageURI}` })
         }
+
+          
+
         await db.transaction(tx => {
+
+            tx.executeSql(
+                'CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, quantity INT, cost FLOAT , barcode TEXT UNIQUE, detail TEXT, imageURI TEXT, status INT , unitID INT, categoryID INT)'
+            )
+
             tx.executeSql('INSERT INTO products (name, price, quantity, cost , barcode, detail, imageURI, status , unitID , categoryID ) values (?,?,?,?,?,?,?,?,?,?)', [name, price, quantity, cost, barcode, detail , image, status, unitID, categoryID],
                 (txObj, resultSet) => console.log("resultSet:", resultSet),
                 (txObj, error) => console.log('Error', error))

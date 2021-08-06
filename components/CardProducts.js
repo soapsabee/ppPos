@@ -30,11 +30,8 @@ export class CardProducts extends React.Component {
 
                         <View style={panel.content_row_between}>
 
-
-
                             <View style={{ flexDirection: "row" }}>
                                 <Image style={{
-                                    borderStyle: "solid", borderWidth: 1, borderColor: "#D9D9D9",
                                     width: 100,
                                     height: 70,
                                     resizeMode: 'contain',

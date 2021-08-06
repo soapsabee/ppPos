@@ -13,6 +13,7 @@ import * as db from '../database'
 import { getProducts } from './selector'
 import moment from 'moment';
 import * as FileSystem from 'expo-file-system';
+
 import * as Sharing from 'expo-sharing';
 
 function* productFetch(actions) {
@@ -190,7 +191,7 @@ function* setAddBasketCashierManual(actions) {
                 yield put({ type: SET_UPDATE_CASHIER, payload: { key: "cashier", value: data } });
                 i++
             }
-            yield put({ type: INCREASE_TOTAL_CASHIER, payload: { key: "null", value: (data[0].price * number) } })
+            yield put({ type: INCREASE_TOTAL_CASHIER, payload: { key: "totalCashier", value: (data[0].price * number) } })
         }
 
         yield setClearProducts({ key: "cashierInputProducts", value: "null" })
@@ -253,43 +254,88 @@ function* confirmCalculator(actions) {
 }
 
 function* importProductCSV(actions) {
-    const uri = actions.payload
-    const read = yield FileSystem.readAsStringAsync(uri)
-    const productCSV = yield processDataImport(read)
   
+   
+    const productCSV = yield processDataImport(actions.payload)
+  
+//   console.log("productCSV: ",productCSV)
+
     yield all(productCSV.map(value => 
-        call(db.productsInsert, { payload: value.product })
+        call(db.productsInsert, { payload: value })
 
     ))
 
-  
+    yield productFetch()
+
+    
 }
 
-function* processDataImport(allText) {
-    let allTextLines = allText.split(/\r\n|\n/);
-    let headers = allTextLines[0].replace(/\s/g,'').split(',');
-    let lines = [];
+function* processDataImport(allTextLines) {
+  
+    let array = allTextLines.split(",")
+    array.splice(0,11)
+    // let headers = all[0].split(',');
 
-    for (let i=1; i<allTextLines.length; i++) {
-        let data = allTextLines[i].split(',');
-        if (data.length == headers.length) {
+    // let array = all.splice(0,)
 
-            let tarr = {};
-            for (let j=0; j<headers.length; j++) {
-
-                tarr = { ...tarr, product:{ ...tarr.product, [headers[j]]: data[j] } } 
-                
-            }
-            
-            lines.push(tarr);
+    let data =  []
+    let c = 0
+    let lastC = 11
+    let length = 0
+    array.forEach(e => {
+        c++
+        if(c == lastC){
+            lastC += lastC
+            length++
         }
-    }
-    return lines
+    })
+
+    console.log(lastC)
+
     
+    let result = []
+    for(let i = 0;i<length ;i ++) {
+      let objCol = {
+        id:"",
+        name:"",
+        price:"",
+        quantity:"", 
+        cost:"", 
+        barcode:"", 
+        detail:"", 
+        imageURI:"", 
+        status:"", 
+        unitID:"", 
+        categoryID:"",
+      }
+      
+    //   let splitArray = ele.split(",")
+      let index = 0
+      let lastindex = 11
+    //   if(splitArray[0] === ""){
+    //       return
+    //   }
+
+      for (var key in objCol){
+    
+        objCol[key] = array[index]
+        index++
+        if(index == lastindex){
+            lastindex += lastindex
+        }
+      }
+        
+      result.push(objCol)
+      
+    }
+    console.log("result: ",result)
+    
+    return result
 }
 
 
 function* exportFile(actions) {
+
     let data = yield call(db.productsFetch, "export")
     if (data.length > 0) {
         let fileName = "Products" + String(moment(new Date()).add(0, 'days').format('YYYY-MM-DD'));
@@ -315,7 +361,7 @@ function* convertToCSV(objArray) {
 
     let str = '';
 
-    let headerLine = 'id, name, price, quantity, cost, barcode, detail, imageURI, status, unitID, categoryID';
+    let headerLine = 'id,name,price,quantity,cost,barcode,detail,imageURI,status,unitID,categoryID,';
 
     str += headerLine + '\r\n';
 
@@ -357,17 +403,19 @@ function* clearAllTable() {
     yield call(db.deleteCategoriesTable)
     yield call(db.deleteUnitsTable)
 
+    yield productFetch()
 }
 
 function* promptPayFetch(actions){
-    console.log("promptPayFetch");
   let data = yield call(db.promptPayFetch)
-  console.log("data:",data);
-  yield setByKey({key: "promptpayNumber" , payload: data})
+  yield setByKey({key: "promptpayNumber" , payload: data[0].promptpayNumber})
 }
 
 function* editPromptPay(actions) {
-    yield call(db.promptPayUpdate, actions.payload)
+    const elementProducts = yield select(getProducts)
+
+    yield call(db.promptPayUpdate, elementProducts.handleInputPromptPay)
+    yield promptPayFetch()
 }
 
 

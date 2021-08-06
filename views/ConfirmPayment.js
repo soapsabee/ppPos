@@ -4,12 +4,37 @@ import { container } from '../styles/components/'
 import { Button } from 'react-native-paper';
 import NumberBill from '../components/NumberBill'
 import CardCashier from '../components/CardCashier'
-import { dispatchReciept , INSERT_RECIEPT } from "../redux/actions"
+import { dispatchReciept ,dispatchProducts, INSERT_RECIEPT , CLEAR_CASHIER } from "../redux/actions"
 import { connect } from 'react-redux'
 import { panel, text } from '../styles/components/'
+import { Audio } from 'expo-av';
+
+
 
 export class ConfirmPayment extends React.Component {
+  
+    state = {
+        sound: null
+    }
 
+    confirmSound = async (sound) =>{
+        this.setState({sound:sound})
+        await sound.playAsync(); 
+        await sound.unloadAsync(); 
+    }
+
+  
+
+    insertReciept = async (value) => {
+        const { sound } = await Audio.Sound.createAsync(
+            require('../assets/audio/Cash_Register_Sound_Effect.mp3')
+         );
+        this.props.dispatch(dispatchReciept(INSERT_RECIEPT , { key:"null" , value:value } ))
+        this.props.dispatch(dispatchProducts(CLEAR_CASHIER, {key: "null" , value:"null"} ))
+        await this.confirmSound(sound)
+
+        this.props.navigation.navigate('Cashier')
+    }
 
 
     render() {
@@ -36,7 +61,7 @@ export class ConfirmPayment extends React.Component {
                     <Button style={{ backgroundColor: "#FD6721", margin: 2, alignItems: "center" }} contentStyle={{ width: 350, height: 50, }} mode="contained" onPress={() => this.props.navigation.navigate('ConfirmPayment')}>
                         พิมพ์ใบเสร็จ
                     </Button>
-                    <Button style={{ backgroundColor: "#6ACA6B", margin: 2, alignItems: "center" }} contentStyle={{ width: 350, height: 50 }} mode="contained" onPress={() => this.props.dispatch(dispatchReciept(INSERT_RECIEPT , { key:"null" , value:{ balance:totalCashier, totalcost:totalCost , date:billNumber } } ))}>
+                    <Button style={{ backgroundColor: "#6ACA6B", margin: 2, alignItems: "center" }} contentStyle={{ width: 350, height: 50 }} mode="contained" onPress={() => this.insertReciept({ balance:totalCashier, totalcost:totalCost , date:billNumber }) }>
                         ยืนยันการชำระเงิน
                         </Button>
                     {/* </Button> { balance:totalCashier, totalcost:totalCost , date:billNumber } */}

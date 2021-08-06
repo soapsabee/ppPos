@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, Button, StyleSheet } from 'react-native'
 import { Title, List, Divider } from 'react-native-paper'
 import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 import { connect } from 'react-redux'
 import { dispatchProducts } from '../redux/actions/'
 import { IMPORT_PRODUCT_CSV, EXPORT_PRODUCT_CSV ,TABLE_CLEAR} from '../redux/actions'
@@ -19,8 +20,12 @@ export class Backup extends React.Component {
   pickupDocument = async () => {
 
     const file = await DocumentPicker.getDocumentAsync();
+    const filename = file.uri.split("/").pop()
+    // let fileBase64 = await FileSystem.getInfoAsync(FileSystem.cacheDirectory+"/DocumentPicker/");
+    // let directory = await FileSystem.readDirectoryAsync(FileSystem.cacheDirectory+"/DocumentPicker/")
     if(file.type == "success"){
-      this.props.dispatch(dispatchProducts(IMPORT_PRODUCT_CSV, { value: file.uri , key: "null" }))
+      let read = await FileSystem.readAsStringAsync(FileSystem.cacheDirectory+"/DocumentPicker/"+filename)
+      this.props.dispatch(dispatchProducts(IMPORT_PRODUCT_CSV, { value: `${read}` , key: "null" }))
     }
 
   }

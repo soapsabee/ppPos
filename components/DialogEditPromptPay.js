@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Dialog, Portal, Paragraph, TextInput } from 'react-native-paper';
-import { dispatchProducts, SET_KEY , EDIT_PROMPTPAY } from '../redux/actions/'
+import { dispatchProducts, SET_KEY , EDIT_PROMPTPAY, FETCH_PROMPTPAY } from '../redux/actions/'
 
 export default class DialogEditPromptPay extends React.Component {
 
@@ -10,7 +10,8 @@ export default class DialogEditPromptPay extends React.Component {
     }
 
     editPromptPay = async (value) => {
-        await this.props.dispatch(dispatchProducts(EDIT_PROMPTPAY, { value: value, key: "null" }))
+        await this.props.dispatch(dispatchProducts(EDIT_PROMPTPAY, { value: "null", key: "null" }))
+
         await this.hideDialog()
     }
 

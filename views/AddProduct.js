@@ -90,7 +90,7 @@ export class AddProduct extends React.Component {
 
                  
                         <Image style={{
-                            borderStyle: "solid", borderWidth: 1, marginTop: 30, borderColor: "#D9D9D9",
+                            // borderStyle: "solid", borderWidth: 1, marginTop: 30, borderColor: "#D9D9D9",
                             width: 150,
                             height: 150,
                             resizeMode: 'contain',
