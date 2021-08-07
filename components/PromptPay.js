@@ -5,6 +5,7 @@ import { container } from '../styles/components'
 import DialogEditPromptPay from '../components/DialogEditPromptPay'
 import { connect } from 'react-redux'
 import { dispatchProducts, SET_KEY, FETCH_PROMPTPAY } from '../redux/actions/'
+import generatePayload from 'promptpay-qr'
 import SvgQRCode from 'react-native-qrcode-svg';
 
 
@@ -23,8 +24,10 @@ export class PromptPay extends React.Component {
 
     render() {
 
-        const { diaglogEditPromptPay , promptpayNumber , totalCashier } = this.props
-
+        const { diaglogEditPromptPay, promptpayNumber, totalCashier } = this.props
+        const mobileNumber = promptpayNumber
+        const amount = totalCashier
+        const payload = generatePayload(mobileNumber, { amount })
         return (
             <View style={container.defaultGround}>
                 <View style={{ flexDirection: "column", flex: 0.8, justifyContent: "space-around", alignItems: "center" }}>
@@ -38,7 +41,8 @@ export class PromptPay extends React.Component {
                     </View>
 
                     <View>
-                        <SvgQRCode value={promptpayNumber} />
+                        <SvgQRCode value={payload} />
+
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
                         <View style={{ flexDirection: "column", alignItems: "flex-end" }}>
@@ -48,7 +52,7 @@ export class PromptPay extends React.Component {
                             }
                         </View>
                         <View style={{ flexDirection: "column", marginLeft: 10 }}>
-                            <Text>{promptpayNumber != "null" ? promptpayNumber : "ยังไม่ได้ระบุรหัสพร้อมเพย์" }</Text>
+                            <Text>{promptpayNumber != "null" ? promptpayNumber : "ยังไม่ได้ระบุรหัสพร้อมเพย์"}</Text>
                             {this.props.path == "PromptPayCashier" &&
                                 <Text>{totalCashier}</Text>
                             }
@@ -82,7 +86,7 @@ const mapStateToProps = state => {
     // return state
     return {
         diaglogEditPromptPay: state.products.diaglogEditPromptPay,
-        promptpayNumber : state.products.promptpayNumber,
+        promptpayNumber: state.products.promptpayNumber,
         totalCashier: state.products.totalCashier,
 
     }

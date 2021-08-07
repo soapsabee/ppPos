@@ -402,13 +402,19 @@ function* clearAllTable() {
     yield call(db.deleteRecieptsTable)
     yield call(db.deleteCategoriesTable)
     yield call(db.deleteUnitsTable)
+    yield call(db.promptpayDelete)
 
     yield productFetch()
 }
 
 function* promptPayFetch(actions){
   let data = yield call(db.promptPayFetch)
-  yield setByKey({key: "promptpayNumber" , payload: data[0].promptpayNumber})
+  console.log("data: ",data)
+  if(data[0]){
+    let number = data[0].promptpayNumber
+    yield setByKey({key: "promptpayNumber" , payload: number})
+
+  }
 }
 
 function* editPromptPay(actions) {

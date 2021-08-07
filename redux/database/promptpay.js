@@ -9,7 +9,7 @@ export const promptPayFetch = (actions) =>{
 
 
             tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS promptpay (promptpayNumber TEXT)"
+               `CREATE TABLE IF NOT EXISTS promptpay (promptpayNumber TEXT , id INTEGER)`
             )
 
             tx.executeSql(
@@ -27,22 +27,43 @@ export const promptPayFetch = (actions) =>{
 export const promptPayUpdate = async (actions) => {
     return new Promise((resolve, reject) => {
 
+        console.log("actions: ",actions)
 
         db.transaction(tx => {
 
         
-            // tx.executeSql(
-            //     "CREATE TABLE IF NOT EXISTS promptpay (promptpayNumber INTEGER PRIMARY )"
-            // )
-
-            // tx.executeSql('INSERT INTO promptpay (promptpayNumber) values (?)', ["null"],
-            //         (txObj, resultSet) => console.log("resultSet:", resultSet),
-            //         (txObj, error) => console.log('Error', error)
-            // )
-
 
             tx.executeSql(
-                `UPDATE promptpay SET promptpayNumber = ${actions}`, null,
+                `INSERT OR IGNORE INTO promptpay (promptpayNumber , id) values (?, ?)`, [`${actions}`,1],
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+            
+            tx.executeSql(
+                `UPDATE promptpay SET promptpayNumber = '${actions}' WHERE id=1`, null,
+                (txObj, { rows: { _array } }) => resolve(_array)
+                ,
+                (txObj, error) => console.log('Error ', error)
+
+            )
+
+        });
+
+    })
+}
+
+
+export const promptpayDelete =  () => {
+    return new Promise((resolve, reject) => {
+
+
+        db.transaction(tx => {
+
+            tx.executeSql(
+                "DROP TABLE IF EXISTS 'promptpay' ", null,
                 (txObj, { rows: { _array } }) => resolve(_array)
                 ,
                 (txObj, error) => console.log('Error ', error)
