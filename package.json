@@ -30,7 +30,7 @@
     "expo-image-picker": "~10.2.2",
     "expo-sharing": "~9.2.1",
     "expo-sqlite": "~9.2.1",
-    "moment": "^2.27.0",
+    "moment": "^2.29.4",
     "promptpay-qr": "^0.4.4",
     "react": "16.13.1",
     "react-devtools": "^3.6.3",
