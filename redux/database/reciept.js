@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite'
-const db = SQLite.openDatabase('db.ppPosDb') // returns Database object
+const db = SQLite.openDatabaseSync('db.ppPosDb') // returns Database object
 
 export const recieptFetch = (actions) => {
 
@@ -10,7 +10,7 @@ export const recieptFetch = (actions) => {
     }
 
     return new Promise((resolve, reject) => {
-        db.transaction(async (tx) => {
+        db.withTransactionAsync(async (tx) => {
 
             tx.executeSql(
                 'CREATE TABLE IF NOT EXISTS reciept (date TEXT PRIMARY KEY , balance FLOAT , totalcost FLOAT)'
@@ -33,7 +33,7 @@ export const recieptInsert = (actions) => {
     console.log("actions:",actions);
     const { date , balance , totalcost } = actions.payload
 
-    db.transaction(async (tx) => {
+    db.withTransactionAsync(async (tx) => {
 
         tx.executeSql(
             'CREATE TABLE IF NOT EXISTS reciept (date TEXT , balance FLOAT , totalcost FLOAT)'
@@ -55,7 +55,7 @@ export const recieptInsert = (actions) => {
 export const recieptSearch = (actions) => {
     return new Promise((resolve, reject) => {
 
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
             tx.executeSql(
                 `SELECT * FROM reciept WHERE date = ${actions} `, null,
@@ -80,7 +80,7 @@ export const recieptSUM = (actions) => {
     console.log(sqlSUM);
     return new Promise((resolve, reject) => {
 
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
             tx.executeSql(
                sqlSUM, null,
@@ -98,7 +98,7 @@ export const recieptSUM = (actions) => {
 export const deleteRecieptsTable = () => {
     return new Promise((resolve, reject) => {
 
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
             tx.executeSql(
                 `DROP TABLE IF EXISTS reciept`, null,

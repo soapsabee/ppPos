@@ -4,9 +4,8 @@ import { Card, Title, Button, Paragraph } from 'react-native-paper'
 import CardReports from '../components/CardReports'
 import { dispatchReciept, INSERT_RECIEPT, FETCH_RECIEPT, SET_RECIEPT_BYKEY, SORT_RECIEPT , EXPORT_REPORT } from "../redux/actions"
 import { connect } from 'react-redux'
-import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment';
-
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import csvIcon from '../assets/icon/report/csv.png'
 export class Reports extends React.Component {
 
 
@@ -63,7 +62,7 @@ export class Reports extends React.Component {
           <Button style={{ flex: 1, backgroundColor: "#6BCDFD" }} mode="contained" onPress={() => this.setShow(true)}>
             {`วันที่ ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}
           </Button>
-          <Button style={{ flex: 0.2, backgroundColor: "#FD6721", marginLeft: 10 }} icon={require('../assets/icon/report/csv.png')} mode="contained" onPress={() => this._exportCSV(reciept)}>
+          <Button style={{ flex: 0.2, backgroundColor: "#FD6721", marginLeft: 10 }} icon={csvIcon} mode="contained" onPress={() => this._exportCSV(reciept)}>
             CSV
         </Button>
         </View>
@@ -72,7 +71,7 @@ export class Reports extends React.Component {
           {reciept && reciept.map((value,id) => <CardReports key={id} report={value} />)}
         </ScrollView>
 
-        {datePickerShow && (
+        {/* {datePickerShow && (
           <DateTimePicker
             value={date}
             mode={'date'}
@@ -83,7 +82,7 @@ export class Reports extends React.Component {
  
           }
           />
-        )}
+        )}  */}
 
 
       </View>

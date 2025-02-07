@@ -6,7 +6,8 @@ import DialogEditPromptPay from '../components/DialogEditPromptPay'
 import { connect } from 'react-redux'
 import { dispatchProducts, SET_KEY, FETCH_PROMPTPAY } from '../redux/actions/'
 import generatePayload from 'promptpay-qr'
-import SvgQRCode from 'react-native-qrcode-svg';
+import promptPayImg from '../assets/promptPay.png'
+// import SvgQRCode from 'react-native-qrcode-svg';
 
 
 
@@ -37,11 +38,11 @@ export class PromptPay extends React.Component {
                             width: 230,
                             height: 130,
                             resizeMode: 'stretch'
-                        }} source={require('../assets/promptPay.png')} />
+                        }} source={promptPayImg} />
                     </View>
 
                     <View>
-                        <SvgQRCode value={payload} />
+                        {/* <SvgQRCode value={payload} /> */}
 
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>

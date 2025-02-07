@@ -13,7 +13,7 @@ export const NavigationDrawer = (props) => {
   
     return (
       <View style={{ flexDirection: 'row' }}>
-        <Icon.Button name="ios-menu" size={25} marginLeft={10} backgroundColor={"transparent"} onPress={() => toggleDrawer()}>
+        <Icon.Button name="menu" size={25} marginLeft={10} backgroundColor={"transparent"} onPress={() => toggleDrawer()}>
   
         </Icon.Button>
       </View>

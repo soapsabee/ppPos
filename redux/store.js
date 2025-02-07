@@ -11,11 +11,11 @@ const sagaMiddleware = createSagaMiddleware();
 const bindMiddleware = middleware => {
     const arrMiddleware = [middleware];
 
-    if (process.env.NODE_ENV !== "production") {
-        const { composeWithDevTools } = require("redux-devtools-extension");
-        // arrMiddleware.push(createLogger());
-        return composeWithDevTools(applyMiddleware(...arrMiddleware));
-    }
+    // if (process.env.NODE_ENV !== "production") {
+    //     const { composeWithDevTools } = require("redux-devtools-extension");
+    //     // arrMiddleware.push(createLogger());
+    //     return composeWithDevTools(applyMiddleware(...arrMiddleware));
+    // }
     
     return applyMiddleware(...arrMiddleware);
 };

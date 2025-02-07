@@ -4,7 +4,7 @@ import { Card, Avatar, Checkbox, Divider } from 'react-native-paper';
 import { panel } from '../styles/components/'
 import { dispatchProducts, UPDATE_BASKET_CHECKED, DELETE_BASKET_CHECKED } from '../redux/actions/'
 import { connect } from 'react-redux'
-
+import defaultNoImage from '../assets/defaultNoImage.jpg'
 export class CardProducts extends React.Component {
 
 
@@ -36,7 +36,7 @@ export class CardProducts extends React.Component {
                                     height: 70,
                                     resizeMode: 'contain',
 
-                                }} source={imageURI == "null" ? require('../assets/defaultNoImage.jpg') : { uri: imageURI }} />
+                                }} source={imageURI == "null" ? defaultNoImage : { uri: imageURI }} />
                                 <View style={{ flexDirection: "column", marginLeft: 10 }}>
                                     <View>
                                         <Text>บาร์โค๊ด: </Text>

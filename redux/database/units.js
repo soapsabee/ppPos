@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite'
-const db = SQLite.openDatabase('db.ppPosDb') // returns Database object
+const db = SQLite.openDatabaseSync('db.ppPosDb') // returns Database object
 
 
 export const unitsFetch = (actions) => {
@@ -7,7 +7,7 @@ export const unitsFetch = (actions) => {
   
     return new Promise((resolve, reject) => {
 
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
             tx.executeSql(
                 'CREATE TABLE IF NOT EXISTS units (unitID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)'
@@ -28,7 +28,7 @@ export const unitsFetch = (actions) => {
 
 export const unitInsert = (actions) => {
     const name = actions.payload
-    db.transaction(tx => {
+    db.withTransactionAsync(tx => {
         tx.executeSql('INSERT INTO units (name) values (?)', [name],
             (txObj, resultSet) => console.log("resultSet:", resultSet),
             (txObj, error) => console.log('Error', error))
@@ -41,7 +41,7 @@ export const unitInsert = (actions) => {
 export const unitSearch = async (actions) => {
     return new Promise((resolve, reject)=>{
         
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
             tx.executeSql(
                 `SELECT * FROM units WHERE name LIKE '%${actions}%' `,null,
@@ -63,7 +63,7 @@ export const unitDelete = async (actions) => {
     return new Promise((resolve, reject) => {
 
 
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
             tx.executeSql(
                 'DELETE FROM units WHERE unitID = ?', [actions.unitID],
@@ -81,7 +81,7 @@ export const unitDelete = async (actions) => {
 export const deleteUnitsTable = () => {
     return new Promise((resolve, reject) => {
 
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
             tx.executeSql(
                 `DROP TABLE IF EXISTS units`, null,

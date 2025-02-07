@@ -1,11 +1,11 @@
 import * as SQLite from 'expo-sqlite'
-const db = SQLite.openDatabase('db.ppPosDb') // returns Database object
+const db = SQLite.openDatabaseSync('db.ppPosDb') // returns Database object
 import * as FileSystem from 'expo-file-system';
 
 export const promptPayFetch = (actions) =>{
 
     return new Promise((resolve, reject) => {
-        db.transaction(async (tx) => {
+        db.withTransactionAsync(async (tx) => {
 
 
             tx.executeSql(
@@ -29,7 +29,7 @@ export const promptPayUpdate = async (actions) => {
 
         console.log("actions: ",actions)
 
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
         
 
@@ -60,7 +60,7 @@ export const promptpayDelete =  () => {
     return new Promise((resolve, reject) => {
 
 
-        db.transaction(tx => {
+        db.withTransactionAsync(tx => {
 
             tx.executeSql(
                 "DROP TABLE IF EXISTS 'promptpay' ", null,

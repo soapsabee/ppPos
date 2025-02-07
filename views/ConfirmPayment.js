@@ -8,7 +8,7 @@ import { dispatchReciept ,dispatchProducts, INSERT_RECIEPT , CLEAR_CASHIER } fro
 import { connect } from 'react-redux'
 import { panel, text } from '../styles/components/'
 import { Audio } from 'expo-av';
-
+import CashSound from '../assets/audio/Cash_Register_Sound_Effect.mp3'
 
 
 export class ConfirmPayment extends React.Component {
@@ -27,7 +27,7 @@ export class ConfirmPayment extends React.Component {
 
     insertReciept = async (value) => {
         const { sound } = await Audio.Sound.createAsync(
-            require('../assets/audio/Cash_Register_Sound_Effect.mp3')
+            CashSound
          );
         this.props.dispatch(dispatchReciept(INSERT_RECIEPT , { key:"null" , value:value } ))
         this.props.dispatch(dispatchProducts(CLEAR_CASHIER, {key: "null" , value:"null"} ))

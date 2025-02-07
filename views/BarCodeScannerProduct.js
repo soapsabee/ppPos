@@ -1,138 +1,67 @@
-import React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import * as Permissions from 'expo-permissions';
-import { BarCodeScanner } from 'expo-barcode-scanner';
-import { render } from 'react-dom';
-import { connect } from 'react-redux'
-import { dispatchProducts,dispatchCashier, SET_BARCODE_SCANNER, ADD_BASKET_CASHIER } from '../redux/actions/'
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export class BarCodeScannerProduct extends React.Component {
-    state = {
-        hasCameraPermission: null,
-        scanned: false,
-    };
+export default function BarCodeScannerProduct() {
+  const [permission, requestPermission] = useCameraPermissions();
 
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
 
-    async componentDidMount() {
-        this.getPermissionsAsync();
-    }
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
 
-    getPermissionsAsync = async () => {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-       this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: status, barcode: "" }, key: "hasCameraPermission" }));
-
-        // this.setState({ hasCameraPermission: status === 'granted' });
-        // if (this.props.route.params.routeName == "Product") {
-        //     this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: status, barcode: "" }, key: "hasCameraPermission" }));
-        // } else if (this.props.route.params.routeName == "Cashier") {
-        //     this.props.dispatch(dispatchProducts(ADD_BASKET_CASHIER, { value: { status: status, barcode: "" }, key: "hasCameraPermission" }))
-
-        // }
-    };
-
-    setBarcodeScanner = () => {
-        if (this.props.route.params.routeName == "AddProduct") {
-            this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: false, barcode: "" }, key: "scanned" }))
-        } else if (this.props.route.params.routeName == "Cashier") {
-            this.props.dispatch(dispatchProducts(ADD_BASKET_CASHIER, { value: { status: false, barcode: "" }, key: "scanned" }))
-
-        }
-    }
-
-    render() {
-
-        console.log("route:", this.props.route.params.routeName);
-        const { hasCameraPermission, scanned } = this.props;
-
-        if (hasCameraPermission === null) {
-            return <Text>Requesting for camera permission</Text>;
-        }
-        if (hasCameraPermission === false) {
-            return <Text>No access to camera</Text>;
-        }
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                }}>
-                <BarCodeScanner
-                    onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
-                    style={[StyleSheet.absoluteFillObject]}
-                >
-
-                    <View style={styles.layerTop} />
-                    <View style={styles.layerCenter}>
-                        <View style={styles.layerLeft} />
-                        <View style={styles.focused} />
-                        <View style={styles.layerRight} />
-                    </View>
-                    <View style={styles.layerBottom} />
-
-                </BarCodeScanner>
-
-                {scanned && (
-                    <Button title={'Tap to Scan'} onPress={() => this.setBarcodeScanner()} />
-                )}
-            </View>
-        );
-    }
-
-    handleBarCodeScanned = ({ type, data }) => {
-        if (this.props.route.params.routeName == "AddProduct") {
-            this.props.dispatch(dispatchProducts(SET_BARCODE_SCANNER, { value: { status: true, barcode: data }, key: "scanned" }));
-            alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-        } else if (this.props.route.params.routeName == "Cashier") {
-            this.props.dispatch(dispatchProducts(ADD_BASKET_CASHIER, { value: { status: true, barcode: data }, key: "scanned" }));
-            alert(`Bar code ADD with type ${type} and data ${data} has been scanned!`);
-        }
-
-
-    };
-
+  return (
+    <View style={styles.container}>
+      <CameraView 
+      style={styles.camera} 
+      facing={'back'}
+      barcodeScannerSettings={{
+        barcodeTypes: ["qr"],
+      }}
+      >
+        <View style={styles.buttonContainer}>
+        </View>
+      </CameraView>
+    </View>
+  );
 }
 
-
-const mapStateToProps = state => {
-
-    // return state
-    return {
-        hasCameraPermission: state.products.hasCameraPermission,
-        scanned: state.products.scanned
-        
-    }
-
-}
-
-export default connect(mapStateToProps)(BarCodeScannerProduct)
-
-const opacity = 'rgba(0, 0, 0, .6)';
 const styles = StyleSheet.create({
-
-    layerTop: {
-        flex: 2,
-        backgroundColor: opacity
-    },
-    layerCenter: {
-        flex: 1,
-        flexDirection: 'row'
-    },
-    layerLeft: {
-        flex: 1,
-        backgroundColor: opacity
-    },
-    focused: {
-        flex: 10
-    },
-    layerRight: {
-        flex: 1,
-        backgroundColor: opacity
-    },
-    layerBottom: {
-        flex: 2,
-        backgroundColor: opacity
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  message: {
+    textAlign: 'center',
+    paddingBottom: 10,
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    margin: 64,
+  },
+  button: {
+    flex: 1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
 });
-
-

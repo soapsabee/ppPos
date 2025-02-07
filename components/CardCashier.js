@@ -4,7 +4,7 @@ import { View, Text , Image} from 'react-native'
 import { panel } from '../styles/components/'
 import { Value } from 'react-native-reanimated';
 import { dispatchProducts, UPDATE_BASKET_CHECKED , DELETE_BASKET_CHECKED } from '../redux/actions/'
-
+import defaultNoImage from '../assets/defaultNoImage.jpg'
 export default class CardCashier extends React.Component {
 
     onCheckedBTN = (keys) => {
@@ -31,7 +31,7 @@ export default class CardCashier extends React.Component {
                                     height: 70,
                                     resizeMode: 'contain',
 
-                                }}  source={imageURI == "null" ? require('../assets/defaultNoImage.jpg') : { uri: imageURI }} />
+                                }}  source={imageURI == "null" ? defaultNoImage : { uri: imageURI }} />
                             <View style={{ flexDirection: "column", marginLeft: 10 }}>
                                 <View>
                                     <Text>สินค้า: </Text>
