@@ -14,6 +14,8 @@ const UnitAdd = ({ route }) => {
   const basketChecked = useSelector(state => state.units.basketChecked);
   const basketCheckedLength = basketChecked.length;
 
+  console.log("basketChecked: ",basketChecked)
+
   useEffect(() => {
     dispatch(dispatchUnits(FETCH_UNITS, { value: "null", key: "null" }));
   }, [dispatch]);
@@ -63,7 +65,7 @@ const UnitAdd = ({ route }) => {
       </ScrollView>
 
       <View style={{ alignItems: "flex-end" }}>
-        {basketCheckedLength > 0 && <ToolDeleteProducts count={basketCheckedLength} />}
+        {basketCheckedLength > 0 && <ToolDeleteProducts count={basketCheckedLength} basketChecked={basketChecked}/>}
       </View>
 
     </View>

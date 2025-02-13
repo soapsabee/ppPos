@@ -4,8 +4,9 @@ import * as FileSystem from 'expo-file-system';
 // Use openDatabaseSync for expo-sqlite v15+
 const db = SQLite.openDatabaseSync('db.ppPosDb'); // Returns Database object
 
-export const productsFetch = (actions) => {
-    let sqlSelectAll = `SELECT products.id, products.name, products.price, products.quantity, products.cost, 
+export const productsFetch = async (actions) => {
+    try {
+        let sqlSelectAll = `SELECT products.id, products.name, products.price, products.quantity, products.cost, 
                         products.unitID, products.barcode, products.detail, products.imageURI, products.status, 
                         categories.categoryID, categories.name as categoryName, units.name as unitName 
                         FROM products 
@@ -13,36 +14,31 @@ export const productsFetch = (actions) => {
                         LEFT JOIN units ON products.unitID = units.unitID 
                         WHERE products.status = 1`;
 
-    if (actions && actions !== "export") {
-        sqlSelectAll += ` AND products.categoryID = ?`;
-    } else if (actions === "export") {
-        sqlSelectAll = "SELECT * FROM products";
+        if (actions && actions !== "export") {
+            sqlSelectAll += ` AND products.categoryID = ?`;
+        } else if (actions === "export") {
+            sqlSelectAll = "SELECT * FROM products";
+        }
+
+
+        await db.runAsync(
+            'CREATE TABLE IF NOT EXISTS categories (categoryID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)'
+        );
+
+        await db.runAsync(
+            'CREATE TABLE IF NOT EXISTS units (unitID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)'
+        );
+
+        await db.runAsync(
+            'CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, quantity INT, cost FLOAT, barcode TEXT UNIQUE, detail TEXT, imageURI TEXT, status INT, unitID INT, categoryID INT)'
+        );
+
+        const data = db.getAllAsync(sqlSelectAll, actions && actions !== "export" ? [actions] : []);
+        return data
+    } catch (error) {
+        console.log("error: ",error)
     }
 
-    return new Promise((resolve, reject) => {
-        db.withTransactionAsync(tx => {
-            tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS categories (categoryID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)'
-            );
-
-            tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS units (unitID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)'
-            );
-
-            tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, quantity INT, cost FLOAT, barcode TEXT UNIQUE, detail TEXT, imageURI TEXT, status INT, unitID INT, categoryID INT)'
-            );
-
-            tx.executeSql(
-                sqlSelectAll, actions && actions !== "export" ? [actions] : [],
-                (txObj, { rows: { _array } }) => resolve(_array),
-                (txObj, error) => {
-                    console.log('Error ', error);
-                    reject(error);
-                }
-            );
-        });
-    });
 };
 
 export const productsInsert = async (actions) => {

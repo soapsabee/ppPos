@@ -1,43 +1,27 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from 'react';
+import { View, Text } from 'react-native';
 import { Checkbox } from 'react-native-paper';
-import { dispatchUnits, UPDATE_BASKET_CHECKED_UNITS , DELETE_BASKET_CHECKED_UNITS} from '../redux/actions'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
+import { dispatchUnits, UPDATE_BASKET_CHECKED_UNITS, DELETE_BASKET_CHECKED_UNITS } from '../redux/actions';
 
-
-export  class ListUnitsCheckbox extends React.Component {
-
-
-    onCheckedBTN = (id) => {
-        if (this.props.checked == undefined) {
-            this.props.dispatch(dispatchUnits(UPDATE_BASKET_CHECKED_UNITS, { value: id, key: "null" }))
+const ListUnitsCheckbox = ({ item , checked}) => {
+    const dispatch = useDispatch();
+    const onCheckedBTN = (id) => {
+        if (checked === undefined) {
+            dispatch(dispatchUnits(UPDATE_BASKET_CHECKED_UNITS, { value: id, key: "null" }));
         } else {
-            this.props.dispatch(dispatchUnits(DELETE_BASKET_CHECKED_UNITS, { value: id, key: "null" }))
-
+            dispatch(dispatchUnits(DELETE_BASKET_CHECKED_UNITS, { value: id, key: "null" }));
         }
+    };
 
+    return (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Checkbox status={checked ? 'checked' : 'unchecked'} onPress={() => onCheckedBTN(item.unitID)} />
+            <Text>{item.name}</Text>
+        </View>
+    );
+};
 
-    }
+export default ListUnitsCheckbox;
 
-    render() {
-        const { unitID, name } = this.props.item
-
-        return (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Checkbox status={this.props.checked ? 'checked' : 'unchecked'} onPress={() => this.onCheckedBTN(unitID)}  />
-                <Text>{name}</Text>
-            </View>
-        )
-    }
-
-}
-
-
-const mapStateToProps = state => {
-
-    // return state
-    return state  
-  }
-  
-  export default connect(mapStateToProps)(ListUnitsCheckbox)
   

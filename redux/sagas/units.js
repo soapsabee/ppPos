@@ -1,5 +1,17 @@
-import { SET_HANDLEINPUTUNIT, SET_HANDLEINPUT_UNIT, FETCH_UNITS, SET_UNITS, INSERT_NEW_UNIT, UPDATE_BASKET_CHECKED_UNITS, DELETE_BASKET_CHECKED_UNITS, SET_UPDATE_BASKET_CHECKED_UNITS, SET_DELETE_BASKET_CHECKED_UNITS, DELETE_UNIT, SET_CLEAR_BASKET_CHECKED_UNITS, SEARCH_UNIT, SET_SEARCH_UNIT } from "../actions"
-import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
+import { 
+    SET_HANDLEINPUTUNIT, 
+    SET_HANDLEINPUT_UNIT, 
+    FETCH_UNITS, 
+    SET_UNITS, 
+    INSERT_NEW_UNIT, 
+    UPDATE_BASKET_CHECKED_UNITS, 
+    DELETE_BASKET_CHECKED_UNITS, 
+    SET_UPDATE_BASKET_CHECKED_UNITS, 
+    SET_DELETE_BASKET_CHECKED_UNITS, 
+    DELETE_UNIT, 
+    SET_CLEAR_BASKET_CHECKED_UNITS, 
+    SEARCH_UNIT, CLEAR_BASKET_CHECKED_UNIT } from "../actions"
+import { put, takeLatest, call, delay, select, all, take } from 'redux-saga/effects';
 import * as db from '../database'
 import { getUnits } from './selector'
 
@@ -16,9 +28,7 @@ function* unitsFetch(actions) {
 
 
     } else {
-
         data = yield call(db.unitsFetch)
-
     }
 
     yield put({ type: SET_UNITS, payload: { key: "units", value: data } });
@@ -27,7 +37,6 @@ function* unitsFetch(actions) {
 }
 
 function* setHandleInputUnit(actions) {
-
     yield put({ type: SET_HANDLEINPUT_UNIT, payload: { key: actions.key, value: actions.payload } });
 
 }
@@ -63,7 +72,7 @@ function* setClearBasketChecked() {
 
 
 function* deleteUnit(actions) {
-
+    console.log("actions: ",actions)
     yield all(actions.payload.map(element =>
 
         call(db.unitDelete, element),
@@ -92,6 +101,7 @@ function* actionUnits() {
     yield takeLatest(DELETE_BASKET_CHECKED_UNITS, setDeleteBasketChecked)
     yield takeLatest(DELETE_UNIT, deleteUnit)
     yield takeLatest(SEARCH_UNIT, setUnit)
+    yield takeLatest(CLEAR_BASKET_CHECKED_UNIT, setClearBasketChecked)
 }
 
 

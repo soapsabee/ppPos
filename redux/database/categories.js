@@ -3,82 +3,46 @@ import * as SQLite from 'expo-sqlite';
 // Use openDatabaseSync for expo-sqlite v15+
 const db = SQLite.openDatabaseSync('db.ppPosDb'); // Returns Database object
 
-export const categoriesFetch = () => {
-  return new Promise((resolve, reject) => {
-    db.withTransactionAsync(tx => {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS categories (categoryID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)'
-      );
-      tx.executeSql(
-        'SELECT * FROM categories', 
-        [],
-        (txObj, { rows: { _array } }) => resolve(_array),
-        (txObj, error) => {
-          console.log('Error ', error);
-          reject(error);
-        }
-      );
-    });
-  });
+export const categoriesFetch = async () => {
+  try {
+    await db.runAsync('CREATE TABLE IF NOT EXISTS categories (categoryID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)')
+    const data = await db.getAllAsync('SELECT * FROM categories')
+    return data
+  } catch (error) {
+    console.log('Error ', error);
+  }
 };
 
-export const categoryInsert = (actions) => {
-  console.log("actions:", actions);
+export const categoryInsert = async(actions) => {
   const name = actions.payload;
-  db.withTransactionAsync(tx => {
-    tx.executeSql(
-      'INSERT INTO categories (name) values (?)', 
-      [name],
-      (txObj, resultSet) => console.log("resultSet:", resultSet),
-      (txObj, error) => console.log('Error', error)
-    );
-  });
+  try {
+    await db.runAsync('INSERT INTO categories (name) values (?)', [name])
+  } catch (error) {
+    console.log('Error', error)
+  }
 };
 
 export const categoryDelete = async (actions) => {
-  return new Promise((resolve, reject) => {
-    db.withTransactionAsync(tx => {
-      tx.executeSql(
-        'DELETE FROM categories WHERE categoryID = ?', 
-        [actions.categoryID],
-        (txObj, { rows: { _array } }) => resolve(_array),
-        (txObj, error) => {
-          console.log('Error ', error);
-          reject(error);
-        }
-      );
-    });
-  });
+  try {
+    await db.runAsync('DELETE FROM categories WHERE categoryID = ?', [actions.categoryID])
+  } catch (error) {
+    console.log('Error', error)
+  }
 };
 
 export const categorySearch = async (actions) => {
-  return new Promise((resolve, reject) => {
-    db.withTransactionAsync(tx => {
-      tx.executeSql(
-        `SELECT * FROM categories WHERE name LIKE ?`, 
-        [`%${actions}%`],
-        (txObj, { rows: { _array } }) => resolve(_array),
-        (txObj, error) => {
-          console.log('Error ', error);
-          reject(error);
-        }
-      );
-    });
-  });
+  try {
+    const data = await db.getAllAsync(`SELECT * FROM categories WHERE name LIKE ?`, [`%${actions}%`])
+    return data
+  } catch (error) {
+    console.log('Error', error)
+  }
 };
 
-export const deleteCategoriesTable = () => {
-  return new Promise((resolve, reject) => {
-    db.withTransactionAsync(tx => {
-      tx.executeSql(
-        `DROP TABLE IF EXISTS categories`, 
-        [],
-        (txObj, { rows: { _array } }) => resolve(_array),
-        (txObj, error) => {
-          console.log('Error ', error);
-          reject(error);
-        }
-      );
-    });
-  });
+export const deleteCategoriesTable = async() => {
+  try {
+     await db.runAsync(`DROP TABLE IF EXISTS categories`)
+  } catch (error) {
+    console.log('Error', error)
+  }
 };

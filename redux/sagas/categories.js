@@ -1,5 +1,5 @@
 import { FETCH_CATEGORYS , SET_CATEGORYS , INSERT_NEW_CATEGORY , SET_HANDLEINPUTCATEGORY , SET_HANDLEINPUT_CATEGORY , FETCH_UNITS , SET_UNITS , INSERT_NEW_UNIT , FETCH_CATEGORIES_MERGE_UNITS , UPDATE_BASKET_CHECKED_CATEGORY , DELETE_BASKET_CHECKED_CATEGORY , CLEAR_BASKET_CHECKED_CATEGORY ,SET_UPDATE_BASKET_CHECKED_CATEGORY , SET_DELETE_BASKET_CHECKED_CATEGORY , SET_CLEAR_BASKET_CHECKED_CATEGORY , DELETE_CATEGORY , SEARCH_CATEGORY } from "../actions"
-import { put, takeLatest, call, delay, select, all } from 'redux-saga/effects';
+import { put, takeLatest, call, delay, select, all, take } from 'redux-saga/effects';
 import * as db from '../database'
 import { getCategories } from './selector'
 
@@ -102,6 +102,7 @@ function* actionCategories() {
     yield takeLatest(DELETE_BASKET_CHECKED_CATEGORY, setDeleteBasketChecked)
     yield takeLatest(DELETE_CATEGORY, deleteCategory )
     yield takeLatest(SEARCH_CATEGORY, setCategory)
+    yield takeLatest(CLEAR_BASKET_CHECKED_CATEGORY, setClearBasketChecked)
 
 }
 

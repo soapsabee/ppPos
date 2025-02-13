@@ -2,96 +2,59 @@ import * as SQLite from 'expo-sqlite'
 const db = SQLite.openDatabaseSync('db.ppPosDb') // returns Database object
 
 
-export const unitsFetch = (actions) => {
-    let sqlSelectAll = "SELECT * FROM units"
-  
-    return new Promise((resolve, reject) => {
+export const unitsFetch = async () => {
+    let sqlSelectAll = "SELECT * FROM units";
+    try {
 
-        db.withTransactionAsync(tx => {
+        await db.runAsync('CREATE TABLE IF NOT EXISTS units (unitID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)');
+        return await db.getAllAsync(sqlSelectAll);
 
-            tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS units (unitID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)'
-            )
-            tx.executeSql(
-                sqlSelectAll, null,
-                (txObj, { rows: { _array } }) => resolve(_array)
-                ,
-                (txObj, error) => console.log('Error ', error)
-
-            )
-
-        });
-
-    })
-}
+    } catch (error) {
+        console.error("Error fetching units:", error);
+        throw error; // Ensures caller can handle the error
+    }
+};
 
 
 export const unitInsert = (actions) => {
     const name = actions.payload
-    db.withTransactionAsync(tx => {
-        tx.executeSql('INSERT INTO units (name) values (?)', [name],
-            (txObj, resultSet) => console.log("resultSet:", resultSet),
-            (txObj, error) => console.log('Error', error))
-    })
+    try {
+        db.withTransactionAsync(async () => {
+            await db.runAsync('INSERT INTO units (name) values (?)', [name])
+        })
+    } catch (err) {
+        console.log("err: ", err)
+    }
+
 }
 
 
 
 
 export const unitSearch = async (actions) => {
-    return new Promise((resolve, reject)=>{
-        
-        db.withTransactionAsync(tx => {
-
-            tx.executeSql(
-                `SELECT * FROM units WHERE name LIKE '%${actions}%' `,null,
-                (txObj, { rows: { _array } }) => resolve(_array)
-                ,
-                (txObj, error) => console.log('Error ', error)
-
-            )
-
-        });
-
-    })
+    try {
+        const data = await db.getAllAsync(`SELECT * FROM units WHERE name LIKE '%${actions}%' `, null)
+        return data
+    } catch (error) {
+        console.log('Error ', error)
+    }
 }
 
 
 
 
 export const unitDelete = async (actions) => {
-    return new Promise((resolve, reject) => {
-
-
-        db.withTransactionAsync(tx => {
-
-            tx.executeSql(
-                'DELETE FROM units WHERE unitID = ?', [actions.unitID],
-                (txObj, { rows: { _array } }) => resolve(_array)
-                ,
-                (txObj, error) => console.log('Error ', error)
-
-            )
-
-        });
-
-    })
+    try {
+        await db.runAsync('DELETE FROM units WHERE unitID = ?', [actions.unitID])        
+    } catch (error) {
+        console.log("error: ",error)
+    }
 }
 
-export const deleteUnitsTable = () => {
-    return new Promise((resolve, reject) => {
-
-        db.withTransactionAsync(tx => {
-
-            tx.executeSql(
-                `DROP TABLE IF EXISTS units`, null,
-                (txObj, { rows: { _array } }) => resolve(_array)
-                ,
-                (txObj, error) => console.log('Error ', error)
-
-            )
-
-        });
-
-    })
+export const deleteUnitsTable = async () => {
+    try {
+        await db.runAsync(`DROP TABLE IF EXISTS units`, null)
+    } catch (error) {
+        console.log("error: ",error)
+    }
 }

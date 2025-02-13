@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import  { Provider as StoreProvider } from 'react-redux'
-import configureStore from "./redux/store"
+import configureAppStore from "./redux/store"
 import db from './redux/database'
 
 import { NavigationContainer , DefaultTheme } from '@react-navigation/native';
@@ -28,7 +28,7 @@ export default class App extends Component {
 
 
     return (
-      <StoreProvider store={configureStore}>
+      <StoreProvider store={configureAppStore()}>
       <PaperProvider>
         <NavigationContainer theme={MyTheme}>
           <Drawer.Navigator drawerContent={(props) => <DrawerContent {... props} />} >
